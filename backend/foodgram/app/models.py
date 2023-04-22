@@ -8,7 +8,7 @@ from django.db import models
 User = get_user_model()  # временное решение
 
 
-class Teg(models.Model):
+class Tag(models.Model):
     """Тег"""
 
     # наименование
@@ -46,12 +46,26 @@ class Recipe(models.Model):
     title = models.CharField(max_length=200, unique=True)
     # изображение
     image = 
+    # дата публикации
+    pub_date = models.DateTimeField(
+        'Дата публикации',
+        auto_now_add=True
+    )
+    
     # описание
     description = models.TextField()
     # ингридиенты 
-    ingredient = models.ManyToManyField() # множественный выбор из предустоновленного списка
+    ingredient = models.ManyToManyField(
+        Ingredient,
+        through='Recipe_ingredient',
+        through_fields=('recipe', 'ingredient'),
+        verbose_name='Ингредиенты'
+    ) # множественный выбор из предустоновленного списка
     # теги (выбор  из предустоновленных)
-    tags = models.ManyToManyField() # выбор из предуставновленных
+    tags = models.ManyToManyField(
+        Tag,
+        verbose_name='Теги'
+    ) # выбор из предуставновленных
     # время приготовления в минутах
     time_cook = models.IntegerField()
     

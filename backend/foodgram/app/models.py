@@ -1,11 +1,5 @@
-from pyexpat import model
-from turtle import mode
-from django.contrib.auth import get_user_model
 from django.db import models
-
-# from django.urls import reverse
-
-User = get_user_model()  # временное решение
+from users.models import CustomUser
 
 
 class Tag(models.Model):
@@ -28,54 +22,72 @@ class Ingredient(models.Model):
 
     # наименование
     title = models.CharField(max_length=200, unique=True)
-    # количество
-    count = models.IntegerField(unique=True)
     # единица измерения
-    unit = models.CharField(unique=True)
+    unit = models.CharField(max_length=200, unique=True)
 
 
 class Recipe(models.Model):
     """Рецепт"""
-    
+
     # автор
     author = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
     )
-    # название 
+    # название
     title = models.CharField(max_length=200, unique=True)
     # изображение
-    image = 
-    # дата публикации
-    pub_date = models.DateTimeField(
-        'Дата публикации',
-        auto_now_add=True
+    image = models.ImageField(
+        "Картинка",
+        upload_to="recipes/",
+        blank=True,
     )
-    
+    # дата публикации
+    pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
     # описание
     description = models.TextField()
-    # ингридиенты 
+    # ингридиенты
     ingredient = models.ManyToManyField(
         Ingredient,
-        through='Recipe_ingredient',
-        through_fields=('recipe', 'ingredient'),
-        verbose_name='Ингредиенты'
-    ) # множественный выбор из предустоновленного списка
-    # теги (выбор  из предустоновленных)
+        through="Recipe_ingredient",
+        through_fields=("recipe", "ingredient"),
+        verbose_name="Ингредиенты",
+    )  # множественный выбор из предустоновленного списка
+    # теги
     tags = models.ManyToManyField(
         Tag,
-        verbose_name='Теги'
-    ) # выбор из предуставновленных
+        verbose_name="Теги",
+    )  # выбор из предуставновленных
     # время приготовления в минутах
     time_cook = models.IntegerField()
-    
-    
+
+    # class Meta:
+    #     # сортировка
+    #     pass
+
+
+class Recipe_ingredient(models.Model):
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+        related_name="recipes",
+        verbose_name="Рецепт",
+    )
+    ingredient = models.ForeignKey(
+        Ingredient,
+        on_delete=models.CASCADE,
+        related_name="ingredients",
+        verbose_name="Ингредиент",
+    )
+    count = models.IntegerField()
+
 
 class Favorite(models.Model):
     """Избранное"""
+
     # пользователь
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
     )
     # рецепт
@@ -84,17 +96,32 @@ class Favorite(models.Model):
         on_delete=models.CASCADE,
     )
 
-    
-class Follow(models.Model):
+
+class Subscribe(models.Model):
     user = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
-        related_name='follower',
+        related_name="subscriber",
     )
     author = models.ForeignKey(
-        User,
+        CustomUser,
         on_delete=models.CASCADE,
-        related_name='following',
+        related_name="autors",
         # verbose_name='Автор'
     )
 
+
+class Shopping_card(models.Model):
+    """Корзина"""
+
+    # пользователь
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name="cards",
+    )
+    # рецепт
+    recipe = models.ForeignKey(
+        Recipe,
+        on_delete=models.CASCADE,
+    )

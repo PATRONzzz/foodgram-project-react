@@ -1,5 +1,8 @@
 import base64
+from dataclasses import field
 
+from api.pagination import UserPagination
+from app.models import CustomUser
 from django.core.files.base import ContentFile
 from rest_framework import serializers
 
@@ -11,3 +14,9 @@ from rest_framework import serializers
 #             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
 
 #         return super().to_internal_value(data)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ("email", "id", "username", "first_name", "last_name")

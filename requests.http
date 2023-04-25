@@ -1,231 +1,49 @@
 ###
-// Регистрируем пользователя
-POST http://127.0.0.1:8000/api/v1/auth/users/ 
-Content-Type: application/json
+// Разное
+get http://127.0.0.1:8000/api/
 
-{
-    "username": "artem",
-    "password": "small555"
-}
 
 ###
-// Проверка токена
-POST http://127.0.0.1:8000/api/v1/jwt/verify/
+// Список пользователей
+GET http://127.0.0.1:8000/api/users/ 
+Authorization: Token f2bb7fe545653e86ae7178b6b6d3239cd2addade
+###
+// создание пользователя пользователя
+POST http://127.0.0.1:8000/api/users/
 Content-Type: application/json
 
 {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk"
+"email": "vpupkin@yandex.ru",
+"username": "vasya.pupkin_2",
+"first_name": "Вася_2",
+"last_name": "Пупкин",
+"password": "Qwerty123"
+}
+
+
+### 
+// создание пользователя с очень длинным именем
+POST http://127.0.0.1:8000/api/users/
+Content-Type: application/json
+
+{
+"email": "vpupkin@yandex.ru",
+"username": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+"first_name": "Вася_2",
+"last_name": "Пупкин",
+"password": "Qwerty123"
 }
 
 ###
 //  получение токена
-POST http://127.0.0.1:8000/api/v1/jwt/create/ 
+POST http://127.0.0.1:8000/api/auth/token/login/ 
 Content-Type: application/json
 
 {
-    "username": "artem",
-    "password": "small555"
+    "password": "_PpJmAMKdsQ",
+    "email": "aaa@saf.comdf"
 }
 
-#   "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MTYzMTE5MCwianRpIjoiYjkwZjc2NDM0YzIyNDZhYTk5ZmQxZjNkYzRkODUyMDYiLCJ1c2VyX2lkIjoxfQ.oO3-7Zx_A_v-uF8G-EWpSLsaeZkMdqhJgYr2uEwvOrA",
-#   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk"
+// bob_12 "auth_token": "f2bb7fe545653e86ae7178b6b6d3239cd2addade"
 
-
-###
-//  получение токена второго пользователя
-POST http://127.0.0.1:8000/api/v1/jwt/create/ 
-Content-Type: application/json
-
-{
-    "username": "nonartem",
-    "password": "small555"
-}
-
-# "refresh": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaCIsImV4cCI6MTY3MTY5MTU5MSwianRpIjoiZGZjOWJiMjg1NWExNDA2NzhkZDM0NmJkYjk3ZGVlZGIiLCJ1c2VyX2lkIjoyfQ.ov2R1410bbF54owsrxCwzsk52vBe-WDPAHwSMxwFgqE",
-#   "access": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjkxNTkxLCJqdGkiOiI3MTZlOWM1MzY3NzA0ZjJjYTA0YjVmNDQyMTA5MGFjMiIsInVzZXJfaWQiOjJ9.t7QADS9G9OuAmG8u0xsvbMjW68gLQn7OCqLmhFNp4Jc"
-
-
-###
-// Создание группы. Рабоает один раз для создания
-POST http://127.0.0.1:8000/api/v1/groups/ 
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-"title": "cats",
-"slug": "cats",
-"description": "soft cats"
-}
-
-###
-// Получение списка групп
-GET http://127.0.0.1:8000/api/v1/groups/ 
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Информация о сообществе
-GET http://127.0.0.1:8000/api/v1/groups/1/ 
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-### 
-// Создание публикации. Пока без картинки, потом надо сделать с картинкой
-POST http://127.0.0.1:8000/api/v1/posts/ 
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-    "text": "string",
-    "author": 1,
-    //"image": "",
-    "group": 1
-}
-
-### 
-// Создание публикации анонимным пользователем
-POST http://127.0.0.1:8000/api/v1/posts/ 
-Content-Type: application/json
-
-{
-    "text": "string",
-    "author": 1,
-    //"image": "",
-    "group": 1
-}
-
-### 
-// Создание публикации с недостающим обязательным полем
-POST http://127.0.0.1:8000/api/v1/posts/ 
-Content-Type: application/json
-# Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjkxNTkxLCJqdGkiOiI3MTZlOWM1MzY3NzA0ZjJjYTA0YjVmNDQyMTA5MGFjMiIsInVzZXJfaWQiOjJ9.t7QADS9G9OuAmG8u0xsvbMjW68gLQn7OCqLmhFNp4Jc
-
-{
-    "text": "string",
-    //"author": 1,
-    //"image": "",
-    "group": 1
-}
-
-###
-// Получение списка постов
-GET http://127.0.0.1:8000/api/v1/posts/ 
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Получение поста по id
-GET http://127.0.0.1:8000/api/v1/posts/5/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-
-###
-// Запрос  списка постов от анонимного пользователя
-GET http://127.0.0.1:8000/api/v1/posts/ 
-
-###
-// Получение ограниченнго количества постов
-GET http://127.0.0.1:8000/api/v1/posts/?limit=7&offset=1 
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Изменение поста по id
-PUT http://127.0.0.1:8000/api/v1/posts/5/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-Content-Type: application/json
-
-{
-
-    "text": "string",
-    //"image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mP4z8AAAAMBAQD3A0FDAAAAAElFTkSuQmCC",
-    "group": 1
-
-}
-
-###
-// Изменение поста не автором
-PUT http://127.0.0.1:8000/api/v1/posts/5/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjkxNTkxLCJqdGkiOiI3MTZlOWM1MzY3NzA0ZjJjYTA0YjVmNDQyMTA5MGFjMiIsInVzZXJfaWQiOjJ9.t7QADS9G9OuAmG8u0xsvbMjW68gLQn7OCqLmhFNp4Jc
-Content-Type: application/json
-
-{
-
-    "text": "string",
-    "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mP4z8AAAAMBAQD3A0FDAAAAAElFTkSuQmCC",
-    "group": 1
-
-}
-
-
-###
-// Частичное обновление публикации
-PATCH http://127.0.0.1:8000/api/v1/posts/5/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-Content-Type: application/json
-
-{
-
-    "text": "striddng",
-    //"image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAADElEQVR42mP4z8AAAAMBAQD3A0FDAAAAAElFTkSuQmCC",
-    "group": 1
-
-}
-
-###
-// Удаление публикации публикации
-DELETE  http://127.0.0.1:8000/api/v1/posts/5/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Полчение комментариев
-GET http://127.0.0.1:8000/api/v1/posts/2/comments/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Добавление комментариев
-POST http://127.0.0.1:8000/api/v1/posts/6/comments/
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-    "text": "Третий комментарий"
-}
-###
-// Замена комментария 
-PUT http://127.0.0.1:8000/api/v1/posts/6/comments/7/
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-    "text": "Четвертый комментарий"
-}
-
-###
-// Частичная замена комментария 
-PATCH  http://127.0.0.1:8000/api/v1/posts/6/comments/7/
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-    "text": "Itcnjq комментарий"
-}
-
-###
-// Удаление комментария 
-DELETE   http://127.0.0.1:8000/api/v1/posts/6/comments/7/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Получение списка подписок
-GET http://127.0.0.1:8000/api/v1/follow/
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-###
-// Создание подписки
-POST http://127.0.0.1:8000/api/v1/follow/
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjcxNjMxMTkwLCJqdGkiOiIxMTIzMGNmMmNiZjg0NDVlOWQ4NTA0M2ViN2IyNWY1YyIsInVzZXJfaWQiOjF9.lPx2XF332XqzccSHYTszW3mQQswaYRGXNtKJVo8x3Kk
-
-{
-
-    "following": "artem"
-
-}
+// artem "auth_token": "61a6b7cca0fb4a7ed869a6565571fda373111bfa"

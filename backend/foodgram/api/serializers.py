@@ -3,7 +3,7 @@ from ast import Import
 from dataclasses import field
 
 from api.pagination import UserPagination
-from app.models import CustomUser, Tag
+from app.models import CustomUser, Ingredient, Recipe, ShopCard, Tag
 from django.core.files.base import ContentFile
 from rest_framework import permissions, serializers
 
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ("email", "id", "username", "first_name", "last_name")
+        fields = ("email", "id", "username", "first_name", "last_name", "password")
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -31,3 +31,26 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = "__all__"
+
+
+class RecipeSerializer(serializers.ModelSerializer):
+    """[GET] Список рецептов"""
+
+    class Meta:
+        model = Recipe
+        fields = "__all__"
+
+
+class ShopCardSerializer(serializers.ModelSerializer):
+    """[GET] Список покупок"""
+
+    class Meta:
+        model = ShopCard
+        fields = "__all__"
+
+
+class IngredientSerializer(serializers.ModelSerializer):
+    """Список индигринетов"""
+
+    model = Ingredient
+    fields = "__all__"

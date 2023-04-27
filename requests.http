@@ -1,3 +1,6 @@
+@token_admin = 525db0425781dd94e53bf0a43d4b4b5eb02e532d
+@user_token = ae02e48e566b744c86b984bacf5b7583de34fd57
+
 ###
 // Разное
 get http://127.0.0.1:8000/api/
@@ -12,11 +15,12 @@ Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
 // создание пользователя пользователя
 POST http://127.0.0.1:8000/api/users/
 Content-Type: application/json
+Authorization: Token {{token_admin}}
 
 {
-"email": "vpupkin@yandex.ru",
-"username": "vasya.pupkin_2",
-"first_name": "Вася_2",
+"email": "vpsdsdupkin@yandex.ru",
+"username": "vasya.pupkin_3",
+"first_name": "Вася_21",
 "last_name": "Пупкин",
 "password": "Qwerty123"
 }
@@ -70,3 +74,45 @@ Content-Type: application/json
 // Список тегов
 GET http://127.0.0.1:8000/api/tags/ 
 Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+
+###
+// Список рецептов
+GET http://127.0.0.1:8000/api/tags/ 
+Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+
+###
+// Список покупок
+GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
+Authorization: Token {{user_token}}
+
+###
+// Список покупок, запрос от неавторизованного пользователся
+GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
+# Authorization: Token {{user_token}}
+
+
+###
+// Список рецептов, запрос от неавторизованного пользователся
+GET http://127.0.0.1:8000/api/recipes/
+Authorization: Token {{token_admin}}
+
+###
+// Создание ингридиента
+GET http://127.0.0.1:8000/api/recipes/
+Authorization: Token {{token_admin}}
+Content-Type: application/json
+{
+    
+
+}
+
+
+###
+// Создание рецепта
+GET http://127.0.0.1:8000/api/recipes/
+Authorization: Token {{token_admin}}
+Content-Type: application/json
+{
+
+
+}

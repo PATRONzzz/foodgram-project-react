@@ -6,7 +6,7 @@ class Tag(models.Model):
     """Тег"""
 
     # наименование
-    title = models.CharField(
+    name = models.CharField(
         "название",
         max_length=200,
         unique=True,
@@ -25,7 +25,7 @@ class Ingredient(models.Model):
     """Ингридиент"""
 
     # наименование
-    title = models.CharField(max_length=200, unique=True)
+    name = models.CharField(max_length=200, unique=True)
     # единица измерения
     unit = models.CharField(max_length=200, unique=True)
 
@@ -39,7 +39,10 @@ class Recipe(models.Model):
         on_delete=models.CASCADE,
     )
     # название
-    title = models.CharField(max_length=200, unique=True)
+    name = models.CharField(
+        max_length=200,
+        unique=True,
+    )
     # изображение
     image = models.ImageField(
         "Картинка",
@@ -114,7 +117,7 @@ class Subscribe(models.Model):
     )
 
 
-class Shopping_card(models.Model):
+class ShopCard(models.Model):
     """Корзина"""
 
     # пользователь

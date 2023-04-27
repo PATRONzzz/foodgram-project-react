@@ -1,10 +1,11 @@
 import base64
+from ast import Import
 from dataclasses import field
 
 from api.pagination import UserPagination
-from app.models import CustomUser
+from app.models import CustomUser, Tag
 from django.core.files.base import ContentFile
-from rest_framework import serializers
+from rest_framework import permissions, serializers
 
 # class Base64ImageField(serializers.ImageField):
 #     def to_internal_value(self, data):
@@ -17,6 +18,16 @@ from rest_framework import serializers
 
 
 class UserSerializer(serializers.ModelSerializer):
+    """[GET] Список пользователей"""
+
     class Meta:
         model = CustomUser
         fields = ("email", "id", "username", "first_name", "last_name")
+
+
+class TagSerializer(serializers.ModelSerializer):
+    """[GET] Список тегов"""
+
+    class Meta:
+        model = Tag
+        fields = "__all__"

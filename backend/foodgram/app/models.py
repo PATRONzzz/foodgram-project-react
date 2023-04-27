@@ -6,11 +6,15 @@ class Tag(models.Model):
     """Тег"""
 
     # наименование
-    title = models.CharField(max_length=200, unique=True)
+    title = models.CharField(
+        "название",
+        max_length=200,
+        unique=True,
+    )
     # цветовой Hex-код
     color = models.CharField(max_length=7, unique=True)
     # slug
-    slug = models.SlugField(unique=True)
+    slug = models.SlugField(max_length=200, unique=True)
 
     # class Meta:
     #     verbose_name = "Тег"
@@ -61,9 +65,8 @@ class Recipe(models.Model):
     # время приготовления в минутах
     time_cook = models.IntegerField()
 
-    # class Meta:
-    #     # сортировка
-    #     pass
+    class Meta:
+        ordering = ["-pub_date"]
 
 
 class Recipe_ingredient(models.Model):

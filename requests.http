@@ -6,7 +6,8 @@ get http://127.0.0.1:8000/api/
 ###
 // Список пользователей
 GET http://127.0.0.1:8000/api/users/ 
-Authorization: Token f2bb7fe545653e86ae7178b6b6d3239cd2addade
+Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+
 ###
 // создание пользователя пользователя
 POST http://127.0.0.1:8000/api/users/
@@ -44,6 +45,28 @@ Content-Type: application/json
     "email": "aaa@saf.comdf"
 }
 
-// bob_12 "auth_token": "f2bb7fe545653e86ae7178b6b6d3239cd2addade"
+//  "auth_token": "ae02e48e566b744c86b984bacf5b7583de34fd57"
 
-// artem "auth_token": "61a6b7cca0fb4a7ed869a6565571fda373111bfa"
+###
+//  разлогиниться 
+POST http://127.0.0.1:8000/api/auth/token/logout/ 
+Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+
+
+###
+//  получение токена администратором
+POST http://127.0.0.1:8000/api/auth/token/login/ 
+Content-Type: application/json
+
+{
+    "password": "300580",
+    "email": "androsov.artem.v@gmail.com"
+}
+
+//  "auth_token": "525db0425781dd94e53bf0a43d4b4b5eb02e532d"
+
+
+###
+// Список тегов
+GET http://127.0.0.1:8000/api/tags/ 
+Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57

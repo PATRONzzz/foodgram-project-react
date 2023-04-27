@@ -1,5 +1,5 @@
 from api.pagination import UserPagination
-from api.serializers import UserSerializer
+from api.serializers import TagSerializer, UserSerializer
 from app.models import Favorite, Ingredient, Recipe_ingredient, Subscribe, Tag
 from rest_framework import generics, viewsets
 from rest_framework.decorators import api_view
@@ -19,4 +19,5 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
 
 class TagViewSet(viewsets.ModelViewSet):
-    pass
+    queryset = Tag.objects.all()
+    serializer_class = TagSerializer

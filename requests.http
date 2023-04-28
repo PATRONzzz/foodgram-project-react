@@ -29,7 +29,7 @@ Content-Type: application/json
 
 ###
 // профиль пользователя
-GET http://127.0.0.1:8000/api/users/14/
+GET http://127.0.0.1:8000/api/users/15/
 
 
 ### 

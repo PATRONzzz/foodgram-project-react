@@ -6,6 +6,7 @@ services:
   #     - data:/var/lib/postgresql/data/
   #   env_file:
   #     - ./.env
+
   # web:
   #   image: androsovav/api_yamdb:latest
   #   restart: always
@@ -16,12 +17,14 @@ services:
   #     - db
   #   env_file:
   #     - ./.env
+
   frontend:
     build:
       context: ../frontend
       dockerfile: Dockerfile
     volumes:
       - ../frontend/:/app/result_build/
+
   nginx:
     image: nginx:1.19.3
     ports:

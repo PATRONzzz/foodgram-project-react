@@ -86,6 +86,13 @@ class Recipe_ingredient(models.Model):
         verbose_name="Ингредиент",
     )
     count = models.IntegerField()
+    pub_date = models.DateTimeField(
+        "Дата публикации",
+        auto_now_add=True,
+    )
+
+    class Meta:
+        ordering = ("-pub_date",)
 
 
 class Favorite(models.Model):

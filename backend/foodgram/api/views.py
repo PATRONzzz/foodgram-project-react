@@ -1,10 +1,11 @@
-from api.pagination import UserPagination
+from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
 from api.serializers import (
     IngredientSerializer,
     RecipeSerializer,
     TagSerializer,
-    UserSerializer,
+    UserCreateSerializer,
+    UserReadSerializer,
 )
 from app.models import (
     Favorite,
@@ -15,19 +16,38 @@ from app.models import (
     Subscribe,
     Tag,
 )
-from rest_framework import filters, generics, permissions, viewsets
+from django.shortcuts import get_object_or_404
+from rest_framework import filters, generics, mixins, permissions, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from users.models import CustomUser
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet(
+    mixins.CreateModelMixin,
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     """Пользователи"""
 
     queryset = CustomUser.objects.all()
-    serializer_class = UserSerializer
+    serializer_class = UserReadSerializer
     pagination_class = UserPagination
+
+    def get_serialize_class(self):
+        if self.action in ("list", "retrive"):
+            return UserReadSerializer
+        return UserCreateSerializer
+
+    @action(
+        detail=False,
+        methods=["get"],
+        permission_classes=[CustomIsAuthenticated],
+    )
+    def me(self, request):
+        pass
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

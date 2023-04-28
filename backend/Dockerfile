@@ -4,6 +4,6 @@ COPY ./ /app
 
 RUN pip install -r /app/requirements.txt --no-cache-dir
 
-WORKDIR /app
+COPY foodgram/ .
 
-CMD ["gunicorn", "api_yamdb.wsgi:application", "--bind", "0:8000" ]
+CMD ["gunicorn", "foodgram.wsgi:application", "--bind", "0:8000" ]

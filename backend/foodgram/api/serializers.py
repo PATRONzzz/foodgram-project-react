@@ -2,7 +2,6 @@ import base64
 from ast import Import
 from dataclasses import field
 
-from api.pagination import UserPagination
 from app.models import CustomUser, Ingredient, Recipe, ShopCard, Tag
 from django.core.files.base import ContentFile
 from rest_framework import permissions, serializers
@@ -17,12 +16,20 @@ from rest_framework import permissions, serializers
 #         return super().to_internal_value(data)
 
 
-class UserSerializer(serializers.ModelSerializer):
+class UserReadSerializer(serializers.ModelSerializer):
     """[GET] Список пользователей"""
 
     class Meta:
         model = CustomUser
         fields = ("email", "id", "username", "first_name", "last_name", "password")
+
+
+class UserCreateSerializer(serializers.ModelSerializer):
+    """[POST] Создание нового пользователя."""
+
+    class Meta:
+        model = CustomUser
+        fields = ("email", "username", "first_name", "last_name", "password")
 
 
 class TagSerializer(serializers.ModelSerializer):

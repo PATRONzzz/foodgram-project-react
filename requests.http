@@ -102,6 +102,38 @@ GET http://127.0.0.1:8000/api/tags/1/
 
 
 ###
+// Список игридиентов
+GET http://127.0.0.1:8000/api/ingredients/
+
+###
+// Получение игридиента
+GET http://127.0.0.1:8000/api/ingredients/1/
+
+###
+// Список рецептов
+GET http://127.0.0.1:8000/api/recipes/
+
+
+###
+// Создание рецепта
+GET http://127.0.0.1:8000/api/recipes/
+Authorization: Token {{user_token}}
+Content-Type: application/json
+{
+"ingredients": [
+{}
+],
+"tags": [
+1,
+2
+],
+"image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+"name": "string",
+"text": "string",
+"cooking_time": 1
+}
+
+###
 // Список покупок
 GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 Authorization: Token {{user_token}}
@@ -110,30 +142,3 @@ Authorization: Token {{user_token}}
 // Список покупок, запрос от неавторизованного пользователся
 GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 # Authorization: Token {{user_token}}
-
-
-###
-// Список рецептов, запрос от неавторизованного пользователся
-GET http://127.0.0.1:8000/api/recipes/
-Authorization: Token {{token_admin}}
-
-###
-// Список ингридиентов
-GET http://127.0.0.1:8000/api/recipes/
-Authorization: Token {{token_admin}}
-Content-Type: application/json
-{
-    
-
-}
-
-
-###
-// Создание рецепта
-GET http://127.0.0.1:8000/api/recipes/
-Authorization: Token {{token_admin}}
-Content-Type: application/json
-{
-
-
-}

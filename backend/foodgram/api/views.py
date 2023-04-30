@@ -92,5 +92,7 @@ class TagViewSet(viewsets.ModelViewSet):
 class IngredientViewSet(viewsets.ModelViewSet):
     """Ингридиенты"""
 
-    queryset = Ingredient.objects
+    queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ("^name",)

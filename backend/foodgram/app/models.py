@@ -1,3 +1,4 @@
+from django.core.validators import MinValueValidator
 from django.db import models
 from users.models import CustomUser
 
@@ -7,7 +8,7 @@ class Tag(models.Model):
 
     # наименование
     name = models.CharField(
-        "название",
+        "Название",
         max_length=200,
         unique=True,
     )
@@ -16,9 +17,9 @@ class Tag(models.Model):
     # slug
     slug = models.SlugField(max_length=200, unique=True)
 
-    # class Meta:
-    #     verbose_name = "Тег"
-    #     verbose_name_plural = "Теги"
+    class Meta:
+        verbose_name = "Tegs"
+        verbose_name_plural = "Теги"
 
 
 class Ingredient(models.Model):
@@ -27,7 +28,7 @@ class Ingredient(models.Model):
     # наименование
     name = models.CharField(max_length=200, unique=True)
     # единица измерения
-    unit = models.CharField(max_length=200, unique=True)
+    measurement_unit = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
         return f"{self.name}, {self.unit}"
@@ -59,18 +60,18 @@ class Recipe(models.Model):
     # дата публикации
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
     # описание
-    description = models.TextField()
+    text = models.TextField()
     # ингридиенты
     ingredient = models.ManyToManyField(
         Ingredient,
         through="Recipe_ingredient",
         through_fields=("recipe", "ingredient"),
-        verbose_name="Ингредиенты",
+        verbose_name="Ингредиент",
     )  # множественный выбор из предустоновленного списка
     # теги
     tags = models.ManyToManyField(
         Tag,
-        verbose_name="Теги",
+        verbose_name="Tegs",
     )  # выбор из предуставновленных
     # время приготовления в минутах
     time_cook = models.IntegerField()
@@ -80,19 +81,26 @@ class Recipe(models.Model):
 
 
 class Recipe_ingredient(models.Model):
+    # рецепты
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         related_name="recipes",
         verbose_name="Рецепт",
     )
+    # ингридиенты
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         related_name="ingredients",
-        verbose_name="Ингредиент",
+        verbose_name="Ингредиенты",
     )
-    count = models.IntegerField()
+    # количество
+    amount = models.IntegerField(
+        "Количество",
+        validators=(MinValueValidator(1),),
+    )
+    # дата публикации
     pub_date = models.DateTimeField(
         "Дата публикации",
         auto_now_add=True,
@@ -118,11 +126,13 @@ class Favorite(models.Model):
 
 
 class Subscribe(models.Model):
+    # пользователь
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
         related_name="subscriber",
     )
+    # автор
     author = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,

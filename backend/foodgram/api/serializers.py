@@ -7,14 +7,25 @@ from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from rest_framework import permissions, serializers
 
-# class Base64ImageField(serializers.ImageField):
+# class Hex2NameColor(serializers.Field):
+#     def to_representation(self, value):
+#         return value
 #     def to_internal_value(self, data):
-#         if isinstance(data, str) and data.startswith('data:image'):
-#             format, imgstr = data.split(';base64,')
-#             ext = format.split('/')[-1]
-#             data = ContentFile(base64.b64decode(imgstr), name='temp.' + ext)
+#         try:
+#             data = webcolors.hex_to_name(data)
+#         except ValueError:
+#             raise serializers.ValidationError('Для этого цвета нет имени')
+#         return data
 
-#         return super().to_internal_value(data)
+
+class Base64ImageField(serializers.ImageField):
+    def to_internal_value(self, data):
+        if isinstance(data, str) and data.startswith("data:image"):
+            format, imgstr = data.split(";base64,")
+            ext = format.split("/")[-1]
+            data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
+
+        return super().to_internal_value(data)
 
 
 class UserReadSerializer(serializers.ModelSerializer):
@@ -77,12 +88,30 @@ class TagSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class IngredientSerializer(serializers.ModelSerializer):
+    """Список индигринетов"""
+
+    class Meta:
+        model = Ingredient
+        fields = "__all__"
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     """[GET] Список рецептов"""
 
+    image = Base64ImageField(required=False, allow_null=True)
+    cats = serializers.StringRelatedField(many=True, read_only=True)
+
     class Meta:
         model = Recipe
-        fields = "__all__"
+        fields = (
+            "ingredients",
+            "tags",
+            "image",
+            "name",
+            "text",
+            "cooking_time",
+        )
 
 
 class ShopCardSerializer(serializers.ModelSerializer):
@@ -90,11 +119,4 @@ class ShopCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShopCard
-        fields = "__all__"
-
-
-class IngredientSerializer(serializers.ModelSerializer):
-    """Список индигринетов"""
-
-    model = Ingredient
-    fields = "__all__"
+        fields = ("__all__",)

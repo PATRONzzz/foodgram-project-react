@@ -3,6 +3,7 @@ from api.permissions import CustomIsAuthenticated
 from api.serializers import (
     IngredientSerializer,
     RecipeSerializer,
+    ResetPasswordSerialize,
     TagSerializer,
     UserCreateSerializer,
     UserReadSerializer,
@@ -17,7 +18,7 @@ from app.models import (
     Tag,
 )
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, generics, mixins, permissions, viewsets
+from rest_framework import filters, generics, mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
@@ -33,10 +34,9 @@ class UserViewSet(
     """Пользователи"""
 
     queryset = CustomUser.objects.all()
-    serializer_class = UserReadSerializer
     pagination_class = UserPagination
 
-    def get_serialize_class(self):
+    def get_serializer_class(self):
         if self.action in ("list", "retrive"):
             return UserReadSerializer
         return UserCreateSerializer
@@ -47,7 +47,23 @@ class UserViewSet(
         permission_classes=[CustomIsAuthenticated],
     )
     def me(self, request):
-        pass
+        user = request.user
+        serializer = UserReadSerializer(user)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(
+        detail=False,
+        methods=["post"],
+        permission_classes=(CustomIsAuthenticated,),
+    )
+    def set_password(self, request):
+        serializer = ResetPasswordSerialize(request.user, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+        return Response(
+            {"detail": "The password is successfully changed!"},
+            status=status.HTTP_204_NO_CONTENT,
+        )
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -55,6 +71,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
 
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+    pagination_class = RecipePagination
 
     @action(
         detail=False,

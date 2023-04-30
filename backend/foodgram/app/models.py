@@ -29,6 +29,13 @@ class Ingredient(models.Model):
     # единица измерения
     unit = models.CharField(max_length=200, unique=True)
 
+    def __str__(self):
+        return f"{self.name}, {self.unit}"
+
+    class Meta:
+        verbose_name = "Ingredients"
+        verbose_name_plural = "Ингридиенты"
+
 
 class Recipe(models.Model):
     """Рецепт"""

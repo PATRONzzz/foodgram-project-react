@@ -1,5 +1,5 @@
 @token_admin = 525db0425781dd94e53bf0a43d4b4b5eb02e532d
-@user_token = ae02e48e566b744c86b984bacf5b7583de34fd57
+@user_token = c28697849b6a525c4daed05eec05f216157d102a
 
 ###
 // Разное
@@ -20,17 +20,33 @@ POST http://127.0.0.1:8000/api/users/
 Content-Type: application/json
 
 {
-"email": "vpsdsdupkins@yandex.ru",
-"username": "vasya.pupkin_4",
+"email": "vpsdsdupks1111ddn@yandex.ru",
+"username": "vasya.pupkin_111134",
 "first_name": "Вася_21",
 "last_name": "Пупкин",
-"password": "Qwerty123"
+"password": "Qwerty1232342341"
 }
 
 ###
-// профиль пользователя
-GET http://127.0.0.1:8000/api/users/15/
+// текущий пользователь
+GET http://127.0.0.1:8000/api/users/me/
+Authorization: Token {{user_token}}
 
+###
+// профиль пользователя
+GET http://127.0.0.1:8000/api/users/14/
+
+
+###
+// смена пароля
+POST http://127.0.0.1:8000/api/users/set_password/
+Authorization: Token {{user_token}}
+Content-Type: application/json
+
+{
+  "new_password": "_PpJmAMKdsQ1",
+  "current_password": "_PpJmAMKdsQ"
+}
 
 ### 
 // создание пользователя с очень длинным именем
@@ -51,7 +67,7 @@ POST http://127.0.0.1:8000/api/auth/token/login/
 Content-Type: application/json
 
 {
-    "password": "_PpJmAMKdsQ",
+    "password": "_PpJmAMKdsQ1",
     "email": "aaa@saf.comdf"
 }
 
@@ -79,12 +95,11 @@ Content-Type: application/json
 ###
 // Список тегов
 GET http://127.0.0.1:8000/api/tags/ 
-Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
 
 ###
-// Список рецептов
-GET http://127.0.0.1:8000/api/tags/ 
-Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+// Получение тега
+GET http://127.0.0.1:8000/api/tags/1/ 
+
 
 ###
 // Список покупок
@@ -103,7 +118,7 @@ GET http://127.0.0.1:8000/api/recipes/
 Authorization: Token {{token_admin}}
 
 ###
-// Создание ингридиента
+// Список ингридиентов
 GET http://127.0.0.1:8000/api/recipes/
 Authorization: Token {{token_admin}}
 Content-Type: application/json

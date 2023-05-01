@@ -132,10 +132,14 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "string",
+"name": "rfecipe_2",
 "text": "string",
 "cooking_time": 1
 }
+
+###
+// получение рецепта
+GET http://localhost:8000/api/recipes/2/
 
 ###
 // Список покупок

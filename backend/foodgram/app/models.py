@@ -62,11 +62,11 @@ class Recipe(models.Model):
     # описание
     text = models.TextField()
     # ингридиенты
-    ingredient = models.ManyToManyField(
+    ingredients = models.ManyToManyField(
         Ingredient,
         through="Recipe_ingredient",
         through_fields=("recipe", "ingredient"),
-        verbose_name="Ингредиент",
+        verbose_name="Ингредиенты",
     )
     # теги
     tags = models.ManyToManyField(
@@ -93,18 +93,13 @@ class Recipe_ingredient(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name="ingredients",
+        related_name="ingredient",
         verbose_name="Ингредиенты",
     )
     # количество
     amount = models.IntegerField(
         "Количество",
         validators=(MinValueValidator(1),),
-    )
-    # дата публикации
-    pub_date = models.DateTimeField(
-        "Дата публикации",
-        auto_now_add=True,
     )
 
 

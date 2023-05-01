@@ -111,7 +111,11 @@ class RecipeSerializer(serializers.ModelSerializer):
     """[GET] Список рецептов"""
 
     image = Base64ImageField(required=False, allow_null=True)
-    ingredients = RecipeIngredientSerializer(many=True, read_only=True)
+    ingredients = RecipeIngredientSerializer(
+        many=True,
+        read_only=True,
+        source="recipes",
+    )
 
     class Meta:
         model = Recipe

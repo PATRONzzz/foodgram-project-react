@@ -116,12 +116,16 @@ GET http://127.0.0.1:8000/api/recipes/
 
 ###
 // Создание рецепта
-GET http://127.0.0.1:8000/api/recipes/
+POST http://127.0.0.1:8000/api/recipes/
 Authorization: Token {{user_token}}
 Content-Type: application/json
+
 {
 "ingredients": [
-{}
+{
+  "id": 1,
+  "amount": 20
+}
 ],
 "tags": [
 1,

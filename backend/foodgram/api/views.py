@@ -73,6 +73,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
     serializer_class = RecipeSerializer
     pagination_class = RecipePagination
 
+    def perform_create(self, serializer):
+        serializer.save(author_id=self.request.user.id)
+
     @action(
         detail=False,
         methods=["get"],

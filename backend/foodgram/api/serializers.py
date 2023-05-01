@@ -2,20 +2,23 @@ import base64
 from ast import Import
 from dataclasses import field
 
-from app.models import CustomUser, Ingredient, Recipe, ShopCard, Tag
+import webcolors
+from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, ShopCard, Tag
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from rest_framework import permissions, serializers
 
-# class Hex2NameColor(serializers.Field):
-#     def to_representation(self, value):
-#         return value
-#     def to_internal_value(self, data):
-#         try:
-#             data = webcolors.hex_to_name(data)
-#         except ValueError:
-#             raise serializers.ValidationError('Для этого цвета нет имени')
-#         return data
+
+class Hex2NameColor(serializers.Field):
+    def to_representation(self, value):
+        return value
+
+    def to_internal_value(self, data):
+        try:
+            data = webcolors.hex_to_name(data)
+        except ValueError:
+            raise serializers.ValidationError("There is no name for this color")
+        return data
 
 
 class Base64ImageField(serializers.ImageField):
@@ -96,11 +99,19 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class RecipeIngredientSerializer(serializers.ModelSerializer):
+    """Список индигринетов"""
+
+    class Meta:
+        model = Recipe_ingredient
+        fields = ("id", "amount")
+
+
 class RecipeSerializer(serializers.ModelSerializer):
     """[GET] Список рецептов"""
 
     image = Base64ImageField(required=False, allow_null=True)
-    cats = serializers.StringRelatedField(many=True, read_only=True)
+    ingredients = RecipeIngredientSerializer(many=True, read_only=True)
 
     class Meta:
         model = Recipe

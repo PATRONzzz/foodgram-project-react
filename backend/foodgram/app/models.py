@@ -31,7 +31,7 @@ class Ingredient(models.Model):
     measurement_unit = models.CharField(max_length=200, unique=True)
 
     def __str__(self):
-        return f"{self.name}, {self.unit}"
+        return f"{self.name}, {self.measurement_unit}"
 
     class Meta:
         verbose_name = "Ingredients"
@@ -67,17 +67,18 @@ class Recipe(models.Model):
         through="Recipe_ingredient",
         through_fields=("recipe", "ingredient"),
         verbose_name="Ингредиент",
-    )  # множественный выбор из предустоновленного списка
+    )
     # теги
     tags = models.ManyToManyField(
         Tag,
         verbose_name="Tegs",
-    )  # выбор из предуставновленных
+    )
     # время приготовления в минутах
-    time_cook = models.IntegerField()
+    cooking_time = models.IntegerField()
 
     class Meta:
-        ordering = ["-pub_date"]
+        ordering = ("-pub_date",)
+        verbose_name_plural = "Рецепты"
 
 
 class Recipe_ingredient(models.Model):
@@ -105,9 +106,6 @@ class Recipe_ingredient(models.Model):
         "Дата публикации",
         auto_now_add=True,
     )
-
-    class Meta:
-        ordering = ("-pub_date",)
 
 
 class Favorite(models.Model):

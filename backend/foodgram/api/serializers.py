@@ -1,12 +1,10 @@
 import base64
-from ast import Import
-from dataclasses import field
-from os import name, read
 
 import webcolors
 from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, ShopCard, Tag
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
+from django.shortcuts import get_object_or_404
 from rest_framework import permissions, serializers
 
 
@@ -108,6 +106,7 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
     """Список ингредиентов"""
 
     id = serializers.ReadOnlyField(source="ingredient.id")
+    amount = serializers.IntegerField()
 
     class Meta:
         model = Recipe_ingredient
@@ -136,7 +135,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         )
-        depth = 1
+        # depth = 1
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -145,18 +144,44 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     image = Base64ImageField(required=False, allow_null=True)
     ingredients = RecipeIngredientSerializer(
         many=True,
-        # write_only=True,
-        # source="recipe_ingredient",
+        read_only=True,
+        source="recipe_ingredient",
     )
 
     def create(self, validated_data):
-        print(self.initial_data)
-        print(self.validated_data)
         ingredients = validated_data.pop("ingredients")
-        recipe = Recipe.objects.create(**ingredients)
+        tags_data = validated_data.pop("tags")
+        recipe = Recipe.objects.create(**validated_data)
         for ingredient in ingredients:
-            Recipe_ingredient.objects.create(ingredient)
+            Recipe_ingredient.objects.create(
+                recipe=recipe,
+                ingredient_id=ingredient.get("id"),
+                amount=ingredient.get("amount"),
+            )
+        recipe.tags.set(tags_data)
         return recipe
+
+    def validate(self, data):
+        ingredients = self.initial_data.get("ingredients")
+        # if not ingredients or len(ingredients) < 1:
+        #     raise serializers.ValidationError(
+        #         "I need at least one ingredient for the recipe"
+        #     )
+        # ingredient_list = []
+        # for ingredient in ingredients:
+        #     ingredient = get_object_or_404(
+        #         Recipe_ingredient,
+        #         ingredient=ingredient["id"],
+        #     )
+        #     if ingredient in ingredient_list:
+        #         raise serializers.ValidationError("The ingredients must be unique")
+        #     ingredient_list.append(ingredient)
+        # if int(ingredient_item["amount"]) <= 0:
+        #     raise serializers.ValidationError(
+        #         "Make sure that the value of the amount of the ingredient is greater than 0t is greater than 0"
+        #     )
+        data["ingredients"] = ingredients
+        return data
 
     class Meta:
         model = Recipe

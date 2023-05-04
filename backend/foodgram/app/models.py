@@ -102,6 +102,16 @@ class Recipe_ingredient(models.Model):
         validators=(MinValueValidator(1),),
     )
 
+    class Meta:
+        verbose_name = "Ингредиенты в рецепте"
+        verbose_name_plural = "Ингредиенты в рецептах"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["recipe", "ingredient"],
+                name="unique_ingredient_recipe",
+            )
+        ]
+
     def __str__(self):
         return (
             f"{self.recipe.name}: "

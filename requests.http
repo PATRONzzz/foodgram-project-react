@@ -123,12 +123,12 @@ Content-Type: application/json
 {
 "ingredients": [
 {
-  "ingredient.id": 1,
-  "amount": 20
+  "id": 1,
+  "amount": 21
 },
 {
-  "ingredient.id": 2,
-  "amount": 10
+  "id": 4,
+  "amount": 11
 }
 ],
 "tags": [
@@ -136,9 +136,9 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_3",
-"text": "string",
-"cooking_time": 1
+"name": "rfecipe_8",
+"text": "stringerer",
+"cooking_time": 54
 }
 
 ###

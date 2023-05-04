@@ -123,8 +123,12 @@ Content-Type: application/json
 {
 "ingredients": [
 {
-  "id": 1,
+  "ingredient.id": 1,
   "amount": 20
+},
+{
+  "ingredient.id": 2,
+  "amount": 10
 }
 ],
 "tags": [
@@ -132,7 +136,7 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_2",
+"name": "rfecipe_3",
 "text": "string",
 "cooking_time": 1
 }

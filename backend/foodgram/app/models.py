@@ -28,14 +28,14 @@ class Ingredient(models.Model):
     # наименование
     name = models.CharField(max_length=200, unique=True)
     # единица измерения
-    measurement_unit = models.CharField(max_length=200, unique=True)
+    measurement_unit = models.CharField(max_length=200)
 
     def __str__(self):
         return f"{self.name}, {self.measurement_unit}"
 
     class Meta:
-        verbose_name = "Ingredients"
-        verbose_name_plural = "Ингридиенты"
+        verbose_name = "Ingredient"
+        verbose_name_plural = "Ингридиент"
 
 
 class Recipe(models.Model):
@@ -71,7 +71,7 @@ class Recipe(models.Model):
     # теги
     tags = models.ManyToManyField(
         Tag,
-        verbose_name="Tegs",
+        verbose_name="Tags",
     )
     # время приготовления в минутах
     cooking_time = models.IntegerField()
@@ -86,21 +86,29 @@ class Recipe_ingredient(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name="recipes",
+        related_name="recipe_ingredient",
         verbose_name="Рецепт",
     )
     # ингридиенты
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        related_name="ingredient",
+        related_name="recipe_ingredient",
         verbose_name="Ингредиенты",
     )
     # количество
     amount = models.IntegerField(
-        "Количество",
+        # "Количество",
         validators=(MinValueValidator(1),),
     )
+
+    def __str__(self):
+        return (
+            f"{self.recipe.name}: "
+            f"{self.ingredient.name} - "
+            f"{self.amount} "
+            f"{self.ingredient.measurement_unit}"
+        )
 
 
 class Favorite(models.Model):

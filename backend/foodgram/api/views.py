@@ -2,7 +2,8 @@ from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
 from api.serializers import (
     IngredientSerializer,
-    RecipeSerializer,
+    RecipeCreateSerializer,
+    RecipeReadSerializer,
     ResetPasswordSerialize,
     TagSerializer,
     UserCreateSerializer,
@@ -69,8 +70,13 @@ class UserViewSet(
 class RecipeViewSet(viewsets.ModelViewSet):
     """Рецепты"""
 
+    def get_serializer_class(self):
+        if self.action in ("list", "retrieve"):
+            return RecipeReadSerializer
+        return RecipeCreateSerializer
+
     queryset = Recipe.objects.all()
-    serializer_class = RecipeSerializer
+    serializer_class = RecipeCreateSerializer
     pagination_class = RecipePagination
 
     def perform_create(self, serializer):

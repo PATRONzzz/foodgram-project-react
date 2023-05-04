@@ -1,6 +1,7 @@
 import base64
 from ast import Import
 from dataclasses import field
+from os import name, read
 
 import webcolors
 from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, ShopCard, Tag
@@ -96,26 +97,66 @@ class IngredientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ingredient
-        fields = "__all__"
+        fields = (
+            "id",
+            "name",
+            "measurement_unit",
+        )
 
 
 class RecipeIngredientSerializer(serializers.ModelSerializer):
-    """Список индигринетов"""
+    """Список ингредиентов"""
+
+    id = serializers.ReadOnlyField(source="ingredient.id")
 
     class Meta:
         model = Recipe_ingredient
-        fields = ("id", "amount")
+        fields = (
+            "id",
+            "amount",
+        )
 
 
-class RecipeSerializer(serializers.ModelSerializer):
-    """[GET] Список рецептов"""
+class RecipeReadSerializer(serializers.ModelSerializer):
+    """[GET] получение рецептов"""
 
     image = Base64ImageField(required=False, allow_null=True)
     ingredients = RecipeIngredientSerializer(
         many=True,
-        read_only=True,
-        source="recipes",
+        source="recipe_ingredient",
     )
+
+    class Meta:
+        model = Recipe
+        fields = (
+            "ingredients",
+            "tags",
+            "image",
+            "name",
+            "text",
+            "cooking_time",
+        )
+        depth = 1
+
+
+class RecipeCreateSerializer(serializers.ModelSerializer):
+    """[POST, PATCH, DELETE] создание, правка и удаление рецептов"""
+
+    image = Base64ImageField(required=False, allow_null=True)
+    ingredients = RecipeIngredientSerializer(
+        many=True,
+        # write_only=True,
+        # source="recipe_ingredient",
+    )
+
+    def create(self, validated_data):
+        print(self.initial_data)
+        print(self.validated_data)
+        ingredients = validated_data.pop("ingredients")
+        recipe = Recipe.objects.create(**ingredients)
+        for ingredient in ingredients:
+            Recipe_ingredient.objects.create(ingredient)
+        return recipe
 
     class Meta:
         model = Recipe

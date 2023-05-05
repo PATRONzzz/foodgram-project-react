@@ -35,7 +35,7 @@ class UserReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ("email", "id", "username", "first_name", "last_name", "password")
+        fields = ("email", "id", "username", "first_name", "last_name")
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -124,10 +124,13 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         many=True,
         source="recipe_ingredient",
     )
+    author = UserReadSerializer()
 
     class Meta:
         model = Recipe
         fields = (
+            "id",
+            "author",
             "ingredients",
             "tags",
             "image",
@@ -135,7 +138,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         )
-        # depth = 1
+        depth = 1
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
@@ -163,10 +166,10 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         ingredients = self.initial_data.get("ingredients")
-        # if not ingredients or len(ingredients) < 1:
-        #     raise serializers.ValidationError(
-        #         "I need at least one ingredient for the recipe"
-        #     )
+        if not ingredients or len(ingredients) < 1:
+            raise serializers.ValidationError(
+                "I need at least one ingredient for the recipe"
+            )
         # ingredient_list = []
         # for ingredient in ingredients:
         #     ingredient = get_object_or_404(
@@ -176,12 +179,40 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         #     if ingredient in ingredient_list:
         #         raise serializers.ValidationError("The ingredients must be unique")
         #     ingredient_list.append(ingredient)
-        # if int(ingredient_item["amount"]) <= 0:
-        #     raise serializers.ValidationError(
-        #         "Make sure that the value of the amount of the ingredient is greater than 0t is greater than 0"
+        #     # if int(ingredient_item["amount"]) <= 0:
+        #     #     raise serializers.ValidationError(
+        #     #         "Make sure that the value of the amount of the ingredient is greater than 0t is greater than 0"
         #     )
         data["ingredients"] = ingredients
         return data
+
+    def update(self, instance, validated_data):
+        instance.image = validated_data.get("image", instance.image)
+        instance.name = validated_data.get("name", instance.name)
+        instance.text = validated_data.get("text", instance.text)
+        instance.cooking_time = validated_data.get(
+            "cooking_time",
+            instance.cooking_time,
+        )
+        tags = validated_data.pop("tags")
+        instance.tags.set(tags)
+        ingredients = validated_data.pop("ingredients")
+        Recipe_ingredient.objects.filter(
+            recipe=instance,
+            ingredient__in=instance.ingredients.all(),
+        ).delete()
+        Recipe_ingredient.objects.bulk_create(
+            [
+                Recipe_ingredient(
+                    recipe=instance,
+                    ingredient=Ingredient.objects.get(pk=ingredient["id"]),
+                    amount=ingredient["amount"],
+                )
+                for ingredient in ingredients
+            ]
+        )
+        instance.save()
+        return instance
 
     class Meta:
         model = Recipe
@@ -200,4 +231,4 @@ class ShopCardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShopCard
-        fields = ("__all__",)
+        fields = "__all__"

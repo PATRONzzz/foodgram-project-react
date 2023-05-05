@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
 from api.serializers import (
@@ -5,6 +7,7 @@ from api.serializers import (
     RecipeCreateSerializer,
     RecipeReadSerializer,
     ResetPasswordSerialize,
+    ShopCardSerializer,
     TagSerializer,
     UserCreateSerializer,
     UserReadSerializer,
@@ -18,6 +21,7 @@ from app.models import (
     Subscribe,
     Tag,
 )
+from django.core.exceptions import PermissionDenied
 from django.shortcuts import get_object_or_404
 from rest_framework import filters, generics, mixins, permissions, status, viewsets
 from rest_framework.decorators import action, api_view
@@ -70,22 +74,46 @@ class UserViewSet(
 class RecipeViewSet(viewsets.ModelViewSet):
     """Рецепты"""
 
+    queryset = Recipe.objects.all()
+    serializer_class = RecipeCreateSerializer
+    pagination_class = RecipePagination
+
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
             return RecipeReadSerializer
         return RecipeCreateSerializer
 
-    queryset = Recipe.objects.all()
-    serializer_class = RecipeCreateSerializer
-    pagination_class = RecipePagination
-
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
+
+    def perform_update(self, serializer):
+        if serializer.instance.author != self.request.user:
+            raise PermissionDenied(
+                "Changing someone else's content is prohibited!",
+                HTTPStatus.FORBIDDEN,
+            )
+        super(RecipeViewSet, self).perform_update(serializer)
+
+    @action(
+        detail=True,
+        methods=["post", "delete"],
+        permission_classes=(CustomIsAuthenticated,),
+        pagination_class=None,
+    )
+    def shopping_cart(self, request, **kwargs):
+        recipe = get_object_or_404(Recipe, pk=kwargs["pk"])
+        if request.method == "post":
+            serializer = ShopCardSerializer()
+            pass
+
+        if request.method == "delete":
+            pass
 
     @action(
         detail=False,
         methods=["get"],
         permission_classes=[CustomIsAuthenticated],
+        pagination_class=None,
     )
     def download_shopping_cart(self, request):
         return Response("Запрос получен")

@@ -136,14 +136,57 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_8",
+"name": "rfecipe_9",
 "text": "stringerer",
 "cooking_time": 54
 }
 
 ###
 // получение рецепта
-GET http://localhost:8000/api/recipes/2/
+GET http://localhost:8000/api/recipes/12/
+
+###
+// редактирование рецепта
+PATCH  http://localhost:8000/api/recipes/12/
+Authorization: Token {{user_token}}
+Content-Type: application/json
+
+{
+"ingredients": [
+{
+  "id": 1,
+  "amount": 23
+},
+{
+  "id": 4,
+  "amount": 16
+}
+],
+"tags": [
+1,
+2
+],
+"image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
+"name": "rfecipe_8",
+"text": "stringerer",
+"cooking_time": 50
+}
+
+
+### 
+// удаление рецепта (ОШИБКА ОТРАБОТАЛ БЕЗ ПРОВЕРКИ ПРАВ)
+DELETE  http://localhost:8000/api/recipes/2/
+
+
+###
+// добавление рецепта в список покупок
+POST http://localhost:8000/api/recipes/14/shopping_cart/
+Authorization: Token {{user_token}}
+Content-Type: application/json
+
+{
+  "id": 14,
+}
 
 ###
 // Список покупок

@@ -70,6 +70,25 @@ class UserViewSet(
             status=status.HTTP_204_NO_CONTENT,
         )
 
+    @action(
+        detail=True,
+        methods=[
+            "get",
+        ],
+        permission_classes=(CustomIsAuthenticated,),
+    )
+    def subscriptions(self, request, **kwargs):
+        pass
+
+    @action(
+        detail=True,
+        methods=["post", "delete"],
+        permission_classes=(CustomIsAuthenticated,),
+        pagination_class=None,
+    )
+    def subscriptions(self, request, **kwargs):
+        pass
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """Рецепты"""

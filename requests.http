@@ -101,13 +101,7 @@ GET http://127.0.0.1:8000/api/tags/
 GET http://127.0.0.1:8000/api/tags/1/ 
 
 
-###
-// Список игридиентов
-GET http://127.0.0.1:8000/api/ingredients/
 
-###
-// Получение игридиента
-GET http://127.0.0.1:8000/api/ingredients/1/
 
 ###
 // Список рецептов
@@ -207,3 +201,11 @@ Authorization: Token {{user_token}}
 // удалить рецепт из избранного
 DELETE http://localhost:8000/api/recipes/14/favorite/
 Authorization: Token {{user_token}}
+
+###
+// Список игридиентов
+GET http://127.0.0.1:8000/api/ingredients/
+
+###
+// Получение игридиента
+GET http://127.0.0.1:8000/api/ingredients/1/

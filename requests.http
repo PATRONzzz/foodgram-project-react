@@ -188,7 +188,7 @@ DELETE http://localhost:8000/api/recipes/14/shopping_cart/
 Authorization: Token {{user_token}}
 
 ###
-// Список покупок
+// Cкчать список покупок
 GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 Authorization: Token {{user_token}}
 
@@ -196,3 +196,14 @@ Authorization: Token {{user_token}}
 // Список покупок, запрос от неавторизованного пользователся
 GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 # Authorization: Token {{user_token}}
+
+
+###
+// добавить рецепт в избранное
+POST http://localhost:8000/api/recipes/14/favorite/
+Authorization: Token {{user_token}}
+
+###
+// удалить рецепт из избранного
+DELETE http://localhost:8000/api/recipes/14/favorite/
+Authorization: Token {{user_token}}

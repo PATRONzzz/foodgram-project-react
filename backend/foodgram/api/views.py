@@ -117,10 +117,36 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if request.method == "DELETE":
             get_object_or_404(ShopCart, user=request.user, recipe=recipe).delete()
             return Response(
-                {"detail": "The recipe is deleted!"},
+                {"detail": "Recipe removed from shopp cart list!"},
                 status=status.HTTP_204_NO_CONTENT,
             )
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    @action(
+        detail=True,
+        methods=["post", "delete"],
+        permission_classes=(CustomIsAuthenticated,),
+        pagination_class=None,
+    )
+    def favorite(self, request, **kwargs):
+        recipe = get_object_or_404(Recipe, id=kwargs["pk"])
+        if request.method == "POST":
+            serializer = RecipeShopCardSerializer(
+                recipe, data=request.data, context={"request": request}
+            )
+            serializer.is_valid(raise_exception=True)
+            if not Favorite.objects.filter(user=request.user, recipe=recipe).exists():
+                Favorite.objects.create(user=request.user, recipe=recipe)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                {"errors": "The recipe is already in the favorites list!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if request.method == "DELETE":
+            get_object_or_404(Favorite, user=request.user, recipe=recipe).delete()
+            return Response(
+                {"detail": "Recipe removed from favorites list!"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
 
     @action(
         detail=False,

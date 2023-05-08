@@ -7,18 +7,22 @@ services:
     env_file:
       - ./.env
 
-  # web:
-  #   image: androsovav/foodgram:latest
-  #   restart: always
-  #   volumes:
-  #     - static_value:/app/static/
-  #     - media_value:/app/media/
-  #   depends_on:
-  #     - db
-  #   env_file:
-  #     - ./.env
+  backend:
+    # image: androsovav/foodgram_backend:latest
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    restart: always
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
 
   frontend:
+    # image: androsovav/foodgram_frontend:latest
     build:
       context: ../frontend
       dockerfile: Dockerfile

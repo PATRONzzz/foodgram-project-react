@@ -6,8 +6,8 @@ from api.serializers import (
     IngredientSerializer,
     RecipeCreateSerializer,
     RecipeReadSerializer,
+    RecipeShopCardSerializer,
     ResetPasswordSerialize,
-    ShopCardSerializer,
     TagSerializer,
     UserCreateSerializer,
     UserReadSerializer,
@@ -17,7 +17,7 @@ from app.models import (
     Ingredient,
     Recipe,
     Recipe_ingredient,
-    ShopCard,
+    ShopCart,
     Subscribe,
     Tag,
 )
@@ -101,13 +101,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
         pagination_class=None,
     )
     def shopping_cart(self, request, **kwargs):
-        recipe = get_object_or_404(Recipe, pk=kwargs["pk"])
-        if request.method == "post":
-            serializer = ShopCardSerializer()
-            pass
-
-        if request.method == "delete":
-            pass
+        recipe = get_object_or_404(Recipe, id=kwargs["pk"])
+        if request.method == "POST":
+            serializer = RecipeShopCardSerializer(
+                recipe, data=request.data, context={"request": request}
+            )
+            serializer.is_valid(raise_exception=True)
+            if not ShopCart.objects.filter(user=request.user, recipe=recipe).exists():
+                ShopCart.objects.create(user=request.user, recipe=recipe)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(
+                {"errors": "The recipe is already on the purchase list!"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        if request.method == "DELETE":
+            get_object_or_404(ShopCart, user=request.user, recipe=recipe).delete()
+            return Response(
+                {"detail": "The recipe is deleted!"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     @action(
         detail=False,

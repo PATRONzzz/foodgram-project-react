@@ -1,14 +1,14 @@
 version: '3.3'
 services:
-  # db:
-  #   image: postgres:13.0-alpine
-  #   volumes:
-  #     - data:/var/lib/postgresql/data/
-  #   env_file:
-  #     - ./.env
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - data:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
 
   # web:
-  #   image: androsovav/api_yamdb:latest
+  #   image: androsovav/foodgram:latest
   #   restart: always
   #   volumes:
   #     - static_value:/app/static/
@@ -34,7 +34,7 @@ services:
       - ../frontend/build:/usr/share/nginx/html/
       - ../docs/:/usr/share/nginx/html/api/docs/
 
-# volumes:
-#   static_value:
-#   media_value:
-#   data:
+volumes:
+  static_value:
+  media_value:
+  data:

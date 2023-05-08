@@ -3,7 +3,7 @@ from app.models import (
     Ingredient,
     Recipe,
     Recipe_ingredient,
-    ShopCard,
+    ShopCart,
     Subscribe,
     Tag,
 )
@@ -43,4 +43,4 @@ admin.site.register(Favorite)
 admin.site.register(Recipe)
 admin.site.register(Recipe_ingredient)
 admin.site.register(Subscribe)
-admin.site.register(ShopCard)
+admin.site.register(ShopCart)

@@ -103,7 +103,7 @@ class Recipe_ingredient(models.Model):
     )
 
     class Meta:
-        verbose_name = "Ингредиенты в рецепте"
+        verbose_name = "Ingredients in the recipe"
         verbose_name_plural = "Ингредиенты в рецептах"
         constraints = [
             models.UniqueConstraint(
@@ -152,17 +152,29 @@ class Subscribe(models.Model):
     )
 
 
-class ShopCard(models.Model):
+class ShopCart(models.Model):
     """Корзина"""
 
     # пользователь
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name="cards",
+        related_name="carts",
     )
     # рецепт
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
     )
+
+    class Meta:
+        verbose_name = "Cart"
+        verbose_name_plural = "Корзина"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "recipe"], name="unique_shopping_cart"
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.user.username} - {self.recipe.name}"

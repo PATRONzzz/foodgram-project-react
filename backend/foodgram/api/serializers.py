@@ -1,7 +1,7 @@
 import base64
 
 import webcolors
-from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, ShopCard, Tag
+from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, ShopCart, Tag
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
@@ -226,9 +226,18 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         )
 
 
-class ShopCardSerializer(serializers.ModelSerializer):
-    """[GET] Список покупок"""
+class RecipeShopCardSerializer(serializers.ModelSerializer):
+    """Репет в корзине покупок"""
+
+    image = Base64ImageField(required=False, allow_null=True)
+    name = serializers.ReadOnlyField()
+    cooking_time = serializers.ReadOnlyField()
 
     class Meta:
-        model = ShopCard
-        fields = "__all__"
+        model = Recipe
+        fields = (
+            "id",
+            "name",
+            "image",
+            "cooking_time",
+        )

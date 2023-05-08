@@ -182,11 +182,10 @@ DELETE  http://localhost:8000/api/recipes/2/
 // добавление рецепта в список покупок
 POST http://localhost:8000/api/recipes/14/shopping_cart/
 Authorization: Token {{user_token}}
-Content-Type: application/json
-
-{
-  "id": 14,
-}
+###
+// удаление рецепта из списка покупок
+DELETE http://localhost:8000/api/recipes/14/shopping_cart/
+Authorization: Token {{user_token}}
 
 ###
 // Список покупок

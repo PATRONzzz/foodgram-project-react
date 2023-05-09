@@ -141,7 +141,10 @@ class Favorite(models.Model):
         verbose_name = "Favorite"
         verbose_name_plural = "Избранное"
         constraints = [
-            models.UniqueConstraint(fields=["user", "recipe"], name="unique_favorite")
+            models.UniqueConstraint(
+                fields=["user", "recipe"],
+                name="unique_favorite",
+            )
         ]
 
 
@@ -157,7 +160,7 @@ class Subscribe(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name="autors",
-        # verbose_name='Автор'
+        verbose_name="Автор",
     )
 
 
@@ -185,5 +188,5 @@ class ShopCart(models.Model):
             )
         ]
 
-    # def __str__(self):
-    #     return f"{self.user.username} - {self.recipe.name}"
+    def __str__(self):
+        return f"{self.user.username} - {self.recipe.name}"

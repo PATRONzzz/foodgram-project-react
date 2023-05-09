@@ -111,7 +111,7 @@ GET http://127.0.0.1:8000/api/recipes/
 ###
 // Создание рецепта
 POST http://127.0.0.1:8000/api/recipes/
-Authorization: Token {{user_token}}
+Authorization: Token {{token_admin}}
 Content-Type: application/json
 
 {
@@ -130,7 +130,7 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_9",
+"name": "rfecipe_911",
 "text": "stringerer",
 "cooking_time": 54
 }
@@ -205,6 +205,16 @@ Authorization: Token {{user_token}}
 ###
 // мои подписки
 GET http://localhost:8000/api/users/subscriptions/
+Authorization: Token {{user_token}}
+
+###
+// подписаться на пользователя
+POST http://localhost:8000/api/users/30/subscribe/
+Authorization: Token {{user_token}}
+
+###
+// отписаться от пользователя
+DELETE http://localhost:8000/api/users/30/subscribe/
 Authorization: Token {{user_token}}
 
 ###

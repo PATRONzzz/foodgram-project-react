@@ -1,4 +1,6 @@
+from ast import Sub
 from http import HTTPStatus
+from multiprocessing import context
 
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
@@ -6,7 +8,7 @@ from api.serializers import (
     IngredientSerializer,
     RecipeCreateSerializer,
     RecipeReadSerializer,
-    RecipeShopCardSerializer,
+    RecipeShopCartSerializer,
     ResetPasswordSerialize,
     SubscribeSerializer,
     TagSerializer,
@@ -81,35 +83,53 @@ class UserViewSet(
     def subscriptions(self, request, **kwargs):
         queryset = CustomUser.objects.filter(autors__user=request.user)
         page = self.paginate_queryset(queryset)
-        searilizer = SubscribeSerializer(page, many=True)
+        searilizer = SubscribeSerializer(
+            page,
+            many=True,
+            context={"user": request.user},
+        )
         return Response(searilizer.data, status=status.HTTP_200_OK)
 
     @action(
-        detail=False,
+        detail=True,
         methods=["post", "delete"],
         permission_classes=(CustomIsAuthenticated,),
     )
     def subscribe(self, request, **kwargs):
-        # recipe = get_object_or_404(Recipe, id=kwargs["pk"])
-        # if request.method == "POST":
-        #     serializer = RecipeShopCardSerializer(
-        #         recipe, data=request.data, context={"request": request}
-        #     )
-        #     serializer.is_valid(raise_exception=True)
-        #     if not ShopCart.objects.filter(user=request.user, recipe=recipe).exists():
-        #         ShopCart.objects.create(user=request.user, recipe=recipe)
-        #         return Response(serializer.data, status=status.HTTP_201_CREATED)
-        #     return Response(
-        #         {"errors": "The recipe is already on the purchase list!"},
-        #         status=status.HTTP_400_BAD_REQUEST,
-        #     )
-        # if request.method == "DELETE":
-        #     get_object_or_404(ShopCart, user=request.user, recipe=recipe).delete()
-        #     return Response(
-        #         {"detail": "Recipe removed from shopp cart list!"},
-        #         status=status.HTTP_204_NO_CONTENT,
-        #     )
-        return Response("Запрос получен")
+        author = get_object_or_404(CustomUser, id=kwargs["pk"])
+        user = request.user
+
+        if request.method == "POST":
+            if user == author:
+                return Response(
+                    {"errors": "Вы не можете подписаться на самого себя"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            if Subscribe.objects.filter(user=user, author=author).exists():
+                return Response(
+                    {"errors": "Вы уже подписаны на данного пользователя"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            serializer = SubscribeSerializer(
+                author,
+                data=request.data,
+                context={"request": request},
+            )
+            serializer.is_valid(raise_exception=True)
+            Subscribe.objects.create(user=request.user, author=author)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        if request.method == "DELETE":
+            if user == author:
+                return Response(
+                    {"errors": "Вы не можете отписываться от самого себя"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+            get_object_or_404(Subscribe, user=request.user, author=author).delete()
+            return Response(
+                {"detail": "Подписка отменена!"},
+                status=status.HTTP_204_NO_CONTENT,
+            )
 
 
 class RecipeViewSet(viewsets.ModelViewSet):
@@ -130,7 +150,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
             raise PermissionDenied(
-                "Changing someone else's content is prohibited!",
+                "Изменение чужого контента запрещено!",
                 HTTPStatus.FORBIDDEN,
             )
         super(RecipeViewSet, self).perform_update(serializer)
@@ -144,7 +164,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def shopping_cart(self, request, **kwargs):
         recipe = get_object_or_404(Recipe, id=kwargs["pk"])
         if request.method == "POST":
-            serializer = RecipeShopCardSerializer(
+            serializer = RecipeShopCartSerializer(
                 recipe, data=request.data, context={"request": request}
             )
             serializer.is_valid(raise_exception=True)
@@ -171,7 +191,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def favorite(self, request, **kwargs):
         recipe = get_object_or_404(Recipe, id=kwargs["pk"])
         if request.method == "POST":
-            serializer = RecipeShopCardSerializer(
+            serializer = RecipeShopCartSerializer(
                 recipe, data=request.data, context={"request": request}
             )
             serializer.is_valid(raise_exception=True)
@@ -179,13 +199,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 Favorite.objects.create(user=request.user, recipe=recipe)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(
-                {"errors": "The recipe is already in the favorites list!"},
+                {"errors": "Рецепт уже есть в списке избранных!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         if request.method == "DELETE":
             get_object_or_404(Favorite, user=request.user, recipe=recipe).delete()
             return Response(
-                {"detail": "Recipe removed from favorites list!"},
+                {"detail": "Рецепт удален из списка избранных!"},
                 status=status.HTTP_204_NO_CONTENT,
             )
 
@@ -196,6 +216,12 @@ class RecipeViewSet(viewsets.ModelViewSet):
         pagination_class=None,
     )
     def download_shopping_cart(self, request):
+        #
+        #
+        #
+        #
+        #
+        #
         return Response("Запрос получен")
 
 

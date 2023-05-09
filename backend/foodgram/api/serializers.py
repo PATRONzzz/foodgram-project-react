@@ -54,6 +54,19 @@ class UserCreateSerializer(serializers.ModelSerializer):
         return user
 
 
+class SubscribeSerializer(serializers.ModelSerializer):
+    """[GET] Список подписок"""
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            "email",
+            "username",
+            "first_name",
+            "last_name",
+        )
+
+
 class ResetPasswordSerialize(serializers.ModelSerializer):
     """[POST] Изменение пароля пользователя."""
 

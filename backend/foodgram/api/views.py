@@ -8,6 +8,7 @@ from api.serializers import (
     RecipeReadSerializer,
     RecipeShopCardSerializer,
     ResetPasswordSerialize,
+    SubscribeSerializer,
     TagSerializer,
     UserCreateSerializer,
     UserReadSerializer,
@@ -71,23 +72,44 @@ class UserViewSet(
         )
 
     @action(
-        detail=True,
+        detail=False,
         methods=[
             "get",
         ],
         permission_classes=(CustomIsAuthenticated,),
     )
     def subscriptions(self, request, **kwargs):
-        pass
+        queryset = CustomUser.objects.filter(autors__user=request.user)
+        page = self.paginate_queryset(queryset)
+        searilizer = SubscribeSerializer(page, many=True)
+        return Response(searilizer.data, status=status.HTTP_200_OK)
 
     @action(
-        detail=True,
+        detail=False,
         methods=["post", "delete"],
         permission_classes=(CustomIsAuthenticated,),
-        pagination_class=None,
     )
-    def subscriptions(self, request, **kwargs):
-        pass
+    def subscribe(self, request, **kwargs):
+        # recipe = get_object_or_404(Recipe, id=kwargs["pk"])
+        # if request.method == "POST":
+        #     serializer = RecipeShopCardSerializer(
+        #         recipe, data=request.data, context={"request": request}
+        #     )
+        #     serializer.is_valid(raise_exception=True)
+        #     if not ShopCart.objects.filter(user=request.user, recipe=recipe).exists():
+        #         ShopCart.objects.create(user=request.user, recipe=recipe)
+        #         return Response(serializer.data, status=status.HTTP_201_CREATED)
+        #     return Response(
+        #         {"errors": "The recipe is already on the purchase list!"},
+        #         status=status.HTTP_400_BAD_REQUEST,
+        #     )
+        # if request.method == "DELETE":
+        #     get_object_or_404(ShopCart, user=request.user, recipe=recipe).delete()
+        #     return Response(
+        #         {"detail": "Recipe removed from shopp cart list!"},
+        #         status=status.HTTP_204_NO_CONTENT,
+        #     )
+        return Response("Запрос получен")
 
 
 class RecipeViewSet(viewsets.ModelViewSet):

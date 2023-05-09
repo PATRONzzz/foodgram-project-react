@@ -203,6 +203,11 @@ DELETE http://localhost:8000/api/recipes/14/favorite/
 Authorization: Token {{user_token}}
 
 ###
+// мои подписки
+GET http://localhost:8000/api/users/subscriptions/
+Authorization: Token {{user_token}}
+
+###
 // Список игридиентов
 GET http://127.0.0.1:8000/api/ingredients/
 

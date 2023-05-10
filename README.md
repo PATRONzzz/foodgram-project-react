@@ -148,8 +148,8 @@ docker-compose up -d --build
 <summary><b  style="font-size: 1.1rem;">4. Миграции </b></summary>
 
 ```
-docker-compose exec web python manage.py migrate
-docker-compose exec web python manage.py createsuperuser
+docker-compose exec backend python manage.py migrate
+docker-compose exec backend python manage.py createsuperuser
 ```
 </details>
 

@@ -192,21 +192,8 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get("ingredients")
         if not ingredients or len(ingredients) < 1:
             raise serializers.ValidationError(
-                "I need at least one ingredient for the recipe"
+                "Необходимо ввести не менее одного ингредиента!"
             )
-        ingredient_list = []
-        # for ingredient in ingredients:
-        #     ingredient = get_object_or_404(
-        #         Recipe_ingredient,
-        #         ingredient=ingredient["id"],
-        #     )
-        #     if ingredient in ingredient_list:
-        #         raise serializers.ValidationError("Ингредиенты должны быть уникальными!")
-        #     ingredient_list.append(ingredient)
-        #     if int(ingredient_item["amount"]) <= 0:
-        #         raise serializers.ValidationError(
-        #             "Необходимо ввести не менее одного ингредиента!"
-        #     )
         data["ingredients"] = ingredients
         return data
 
@@ -271,7 +258,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
     """[GET] Список авторов на которых подписан пользователь"""
 
     recipes_count = serializers.SerializerMethodField()
-    recipes = RecipeShopCartSerializer(many=True, read_only=True)
+    recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
     id = serializers.ReadOnlyField(source="author.id")
     email = serializers.ReadOnlyField(source="author.email")
@@ -299,19 +286,11 @@ class SubscribeSerializer(serializers.ModelSerializer):
         ).exists()
         return is_subscribed
 
-    # def get_recipes(self, obj):
-    #     author_recipes = Recipe.objects.filter(author=obj)
-
-    #     if 'recipes_limit' in self.context.get('request').GET:
-    #         recipes_limit = self.context.get('request').GET['recipes_limit']
-    #         author_recipes = author_recipes[:int(recipes_limit)]
-
-    #     if author_recipes:
-    #         serializer = self.get_srs()(
-    #             author_recipes,
-    #             context={'request': self.context.get('request')},
-    #             many=True
-    #         )
-    #         return serializer.data
-
-    #     return []
+    def get_recipes(self, obj):
+        request = self.context.get("request")
+        limit = request.GET.get("recipes_limit")
+        recipes = obj.recipes.all()
+        if limit:
+            recipes = recipes[: int(limit)]
+        serializer = RecipeShopCartSerializer(recipes, many=True, read_only=True)
+        return serializer.data

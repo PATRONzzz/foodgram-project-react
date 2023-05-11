@@ -111,17 +111,17 @@ GET http://127.0.0.1:8000/api/recipes/
 ###
 // Создание рецепта
 POST http://127.0.0.1:8000/api/recipes/
-Authorization: Token {{token_admin}}
+Authorization: Token {{user_token}}
 Content-Type: application/json
 
 {
 "ingredients": [
 {
   "id": 1,
-  "amount": 21
+  "amount": 79
 },
 {
-  "id": 4,
+  "id": 8,
   "amount": 11
 }
 ],
@@ -130,14 +130,14 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_911",
+"name": "rfecipe_3",
 "text": "stringerer",
 "cooking_time": 54
 }
 
 ###
 // получение рецепта
-GET http://localhost:8000/api/recipes/12/
+GET http://localhost:8000/api/recipes/16/
 
 ###
 // редактирование рецепта
@@ -174,7 +174,7 @@ DELETE  http://localhost:8000/api/recipes/2/
 
 ###
 // добавление рецепта в список покупок
-POST http://localhost:8000/api/recipes/14/shopping_cart/
+POST http://localhost:8000/api/recipes/18/shopping_cart/
 Authorization: Token {{user_token}}
 ###
 // удаление рецепта из списка покупок
@@ -185,11 +185,6 @@ Authorization: Token {{user_token}}
 // Cкчать список покупок
 GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
 Authorization: Token {{user_token}}
-
-###
-// Список покупок, запрос от неавторизованного пользователся
-GET http://127.0.0.1:8000/api/recipes/download_shopping_cart/
-# Authorization: Token {{user_token}}
 
 
 ###

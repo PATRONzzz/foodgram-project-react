@@ -1,6 +1,4 @@
-from ast import Sub
 from http import HTTPStatus
-from multiprocessing import context
 
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
@@ -25,10 +23,11 @@ from app.models import (
     Tag,
 )
 from django.core.exceptions import PermissionDenied
+from django.db.models import Sum
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
-from rest_framework import filters, generics, mixins, permissions, status, viewsets
-from rest_framework.decorators import action, api_view
-from rest_framework.pagination import PageNumberPagination
+from rest_framework import filters, mixins, status, viewsets
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from users.models import CustomUser
 
@@ -69,7 +68,7 @@ class UserViewSet(
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         return Response(
-            {"detail": "The password is successfully changed!"},
+            {"detail": "Пароль успешно изменен!"},
             status=status.HTTP_204_NO_CONTENT,
         )
 
@@ -172,13 +171,13 @@ class RecipeViewSet(viewsets.ModelViewSet):
                 ShopCart.objects.create(user=request.user, recipe=recipe)
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(
-                {"errors": "The recipe is already on the purchase list!"},
+                {"errors": "Рецепт уже есть в списке покупок!"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         if request.method == "DELETE":
             get_object_or_404(ShopCart, user=request.user, recipe=recipe).delete()
             return Response(
-                {"detail": "Recipe removed from shopp cart list!"},
+                {"detail": "Рецепт удален из списка покупок в корзине!"},
                 status=status.HTTP_204_NO_CONTENT,
             )
 
@@ -215,14 +214,21 @@ class RecipeViewSet(viewsets.ModelViewSet):
         permission_classes=[CustomIsAuthenticated],
         pagination_class=None,
     )
-    def download_shopping_cart(self, request):
-        #
-        #
-        #
-        #
-        #
-        #
-        return Response("Запрос получен")
+    def download_shopping_cart(self, request, **kwargs):
+        carts = ShopCart.objects.filter(user=self.request.user)
+        recipe_id = [cart.recipe.id for cart in carts]
+        ingredients = (
+            Recipe_ingredient.objects.filter(recipe__in=recipe_id)
+            .values("ingredient")
+            .annotate(amount=Sum("amount"))
+            .values_list("ingredient__name", "ingredient__measurement_unit", "amount")
+        )
+        list_shop = ""
+        for ingredient in ingredients:
+            list_shop += f"{ingredient[0]} ({ingredient[1]}) - {ingredient[2]}\n"
+        response = HttpResponse(list_shop, content_type="text/plain")
+        response["Content-Disposition"] = f"attachment; filename=shopping-list.txt"
+        return response
 
 
 class TagViewSet(viewsets.ModelViewSet):

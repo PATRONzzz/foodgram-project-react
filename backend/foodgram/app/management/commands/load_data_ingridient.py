@@ -9,7 +9,7 @@ DIR = Path(__file__).resolve().parents[5]
 
 
 class Command(BaseCommand):
-    help = "Load data from csv files"
+    help = "Load data ingridient from csv files"
 
     def handle(self, *args, **kwargs):
         with open(

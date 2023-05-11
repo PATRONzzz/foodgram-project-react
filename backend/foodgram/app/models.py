@@ -18,8 +18,8 @@ class Tag(models.Model):
     slug = models.SlugField(max_length=200, unique=True)
 
     class Meta:
-        verbose_name = "Tegs"
-        verbose_name_plural = "Теги"
+        verbose_name = "тег"
+        verbose_name_plural = "теги"
 
 
 class Ingredient(models.Model):
@@ -34,8 +34,8 @@ class Ingredient(models.Model):
         return f"{self.name}, {self.measurement_unit}"
 
     class Meta:
-        verbose_name = "Ingredient"
-        verbose_name_plural = "Ингридиент"
+        verbose_name = "ингридиент"
+        verbose_name_plural = "ингридиенты"
 
 
 class Recipe(models.Model):
@@ -46,7 +46,7 @@ class Recipe(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name="recipes",
-        verbose_name="Автор",
+        verbose_name="автор",
     )
     # название
     name = models.CharField(
@@ -68,19 +68,19 @@ class Recipe(models.Model):
         Ingredient,
         through="Recipe_ingredient",
         through_fields=("recipe", "ingredient"),
-        verbose_name="Ингредиенты",
+        verbose_name="ингредиенты",
     )
     # теги
     tags = models.ManyToManyField(
         Tag,
-        verbose_name="Tags",
+        verbose_name="тег",
     )
     # время приготовления в минутах
     cooking_time = models.IntegerField()
 
     class Meta:
         ordering = ("-pub_date",)
-        verbose_name_plural = "Рецепты"
+        verbose_name_plural = "рецепты"
 
 
 class Recipe_ingredient(models.Model):
@@ -89,14 +89,14 @@ class Recipe_ingredient(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         related_name="recipe_ingredient",
-        verbose_name="Рецепт",
+        verbose_name="рецепт",
     )
     # ингридиенты
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
         related_name="recipe_ingredient",
-        verbose_name="Ингредиенты",
+        verbose_name="ингредиенты",
     )
     # количество
     amount = models.IntegerField(
@@ -138,8 +138,8 @@ class Favorite(models.Model):
     )
 
     class Meta:
-        verbose_name = "Favorite"
-        verbose_name_plural = "Избранное"
+        verbose_name = "избранное"
+        verbose_name_plural = "избранное"
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "recipe"],
@@ -160,7 +160,7 @@ class Subscribe(models.Model):
         CustomUser,
         on_delete=models.CASCADE,
         related_name="autors",
-        verbose_name="Автор",
+        verbose_name="автор",
     )
 
 
@@ -180,8 +180,8 @@ class ShopCart(models.Model):
     )
 
     class Meta:
-        verbose_name = "Cart"
-        verbose_name_plural = "Корзина"
+        verbose_name = "корзина"
+        verbose_name_plural = "списки покупок"
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "recipe"], name="unique_shopping_cart"

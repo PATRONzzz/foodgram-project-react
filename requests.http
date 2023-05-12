@@ -1,5 +1,5 @@
 @token_admin = a5f4c755d774de4627a189388f641d4e0c00e6db
-@user_token = a74a6e12fceba11b6f35bd2e0d18fceddbd93a51
+@user_token = 92ee668586c0c691b36b08d5381f4b0ddc4f626d
 
 @host = 127.0.0.1:8000
 # @host = 127.0.0.1
@@ -37,7 +37,7 @@ Authorization: Token {{user_token}}
 
 ###
 // профиль пользователя
-GET http://{{host}}/api/users/14/
+GET http://{{host}}/api/users/32/
 
 
 ###
@@ -70,8 +70,8 @@ POST http://{{host}}/api/auth/token/login/
 Content-Type: application/json
 
 {
-    "password": "300580",
-    "email": "androsov.aretm.v@gmail.com"
+    "password": "Qwerty1231",
+    "email": "user_1@yandex.ru"
 }
 
 ###
@@ -86,11 +86,9 @@ POST http://{{host}}/api/auth/token/login/
 Content-Type: application/json
 
 {
-    "password": "300580",
+    "password": "Qwerty1232342341",
     "email": "androsov.artem.v@gmail.com"
 }
-
-//  "auth_token": "525db0425781dd94e53bf0a43d4b4b5eb02e532d"
 
 
 ###
@@ -114,8 +112,8 @@ GET http://{{host}}/api/tags/1/
 
 ###
 // Список рецептов
-GET http://{{host}}/api/recipes/
-
+# GET http://{{host}}/api/recipes/
+GET http://{{host}}/api/recipes/?cooking_time=0
 
 ###
 // Создание рецепта
@@ -183,7 +181,7 @@ DELETE  http://{{host}}/api/recipes/2/
 
 ###
 // добавление рецепта в список покупок
-POST http://{{host}}/api/recipes/2/shopping_cart/
+POST http://{{host}}/api/recipes/16/shopping_cart/
 Authorization: Token {{user_token}}
 ###
 // удаление рецепта из списка покупок
@@ -198,7 +196,7 @@ Authorization: Token {{user_token}}
 ###
 // Список покупок, запрос от неавторизованного пользователся
 GET http://{{host}}/api/recipes/download_shopping_cart/
-# Authorization: Token {{user_token}}
+Authorization: Token {{user_token}}
 
 
 ###

@@ -2,17 +2,31 @@ from http import HTTPStatus
 
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
-from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
-                             RecipeReadSerializer, RecipeShopCartSerializer,
-                             ResetPasswordSerialize, SubscribeSerializer,
-                             TagSerializer, UserCreateSerializer,
-                             UserReadSerializer)
-from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
-                        ShopCart, Subscribe, Tag)
+from api.serializers import (
+    IngredientSerializer,
+    RecipeCreateSerializer,
+    RecipeReadSerializer,
+    RecipeShopCartSerializer,
+    ResetPasswordSerialize,
+    SubscribeSerializer,
+    TagSerializer,
+    UserCreateSerializer,
+    UserReadSerializer,
+)
+from app.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    Recipe_ingredient,
+    ShopCart,
+    Subscribe,
+    Tag,
+)
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters, mixins, status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -29,6 +43,8 @@ class UserViewSet(
 
     queryset = CustomUser.objects.all()
     pagination_class = UserPagination
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_fields = ("cooking_time",)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrive"):

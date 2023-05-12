@@ -19,11 +19,11 @@ SECRET_KEY = "django-insecure-cd+6=nd%9#8-u$6=8#vr2b)&a3_fwpb=+4=8n22%7vgjlst9c#
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'backend',
+    "localhost",
+    "127.0.0.1",
+    "backend",
     # '160.120.13.1',
-    'db'
+    "db",
 ]
 
 
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "rest_framework.authtoken",
+    "django_filters",
     "djoser",
     "app.apps.AppConfig",
     "users.apps.UsersConfig",
@@ -79,11 +80,11 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework.authentication.TokenAuthentication",
     ],
-    'DEFAULT_PAGINATION_CLASS': [
-        'api.pagination.UserPagination',
+    "DEFAULT_PAGINATION_CLASS": [
+        "api.pagination.UserPagination",
     ],
-    'PAGE_SIZE': 6,
-    'SEARCH_PARAM': 'name',
+    "PAGE_SIZE": 6,
+    "SEARCH_PARAM": "name",
 }
 
 DJOSER = {"LOGIN_FIELD": "email"}

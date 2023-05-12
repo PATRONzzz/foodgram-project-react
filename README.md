@@ -158,7 +158,7 @@ docker-compose exec backend python manage.py createsuperuser
 <summary><b  style="font-size: 1.1rem;">5. Заполнение базы данных (при наличии дампа) </b></summary>
 
 ```
-docker-compose exec web python manage.py loaddata path/to/your/json
+docker-compose exec backend python manage.py loaddata path/to/your/json
 
 
 ```

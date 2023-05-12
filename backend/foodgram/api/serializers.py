@@ -1,8 +1,16 @@
 import base64
 
 import webcolors
-from app.models import (CustomUser, Ingredient, Recipe, Recipe_ingredient,
-                        ShopCart, Subscribe, Tag)
+from app.models import (
+    CustomUser,
+    Favorite,
+    Ingredient,
+    Recipe,
+    Recipe_ingredient,
+    ShopCart,
+    Subscribe,
+    Tag,
+)
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
@@ -48,10 +56,13 @@ class UserReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        if (self.context.get('request')
-            and not self.context['request'].user.is_anonymous):
-            return Subscribe.objects.filter(user=self.context['request'].user,
-                                            author=obj).exists()
+        if (
+            self.context.get("request")
+            and not self.context["request"].user.is_anonymous
+        ):
+            return Subscribe.objects.filter(
+                user=self.context["request"].user, author=obj
+            ).exists()
         return False
 
 
@@ -83,9 +94,7 @@ class ResetPasswordSerialize(serializers.ModelSerializer):
 
     def validate(self, data):
         if data["new_password"] == data["current_password"]:
-            raise serializers.ValidationError(
-                "Пароль не должен совпадать с текущим!"
-            )
+            raise serializers.ValidationError("Пароль не должен совпадать с текущим!")
         if validate_password(data["new_password"]):
             raise serializers.ValidationError("Не коректный пароль!")
         return data
@@ -119,7 +128,7 @@ class IngredientSerializer(serializers.ModelSerializer):
         )
 
 
-class RecipeIngredientSerializer(serializers.ModelSerializer):
+class RecipeCreadIngredientSerializer(serializers.ModelSerializer):
     """Список ингредиентов"""
 
     id = serializers.ReadOnlyField(source="ingredient.id")
@@ -133,44 +142,80 @@ class RecipeIngredientSerializer(serializers.ModelSerializer):
         )
 
 
+class RecipeReadIngredientSerializer(serializers.ModelSerializer):
+    """Список ингредиентов"""
+
+    id = serializers.ReadOnlyField(source="ingredient.id")
+    amount = serializers.IntegerField()
+    name = serializers.ReadOnlyField(source="ingredient.name")
+    measurement_unit = serializers.ReadOnlyField(source="ingredient.measurement_unit")
+
+    class Meta:
+        model = Recipe_ingredient
+        fields = (
+            "id",
+            "name",
+            "measurement_unit",
+            "amount",
+        )
+
+
 class RecipeReadSerializer(serializers.ModelSerializer):
     """[GET] получение рецептов"""
 
     image = Base64ImageField(required=False, allow_null=True)
-    ingredients = RecipeIngredientSerializer(
+    ingredients = RecipeReadIngredientSerializer(
         many=True,
         source="recipe_ingredient",
     )
     author = UserReadSerializer()
-    # is_favorited = serializers.SerializerMethodField()
-    # is_in_shopping_cart = serializers.SerializerMethodField()
-
+    tags = TagSerializer(many=True)
+    is_favorited = serializers.SerializerMethodField()
+    is_in_shopping_cart = serializers.SerializerMethodField()
 
     class Meta:
         model = Recipe
         fields = (
             "id",
             "author",
-            "ingredients",
             "tags",
+            "ingredients",
+            "is_favorited",
+            "is_in_shopping_cart",
             "image",
             "name",
             "text",
             "cooking_time",
         )
-        
-    # def get_is_favorited(self, obj):
-    #     pass
-    
-    # def get_is_in_shopping_cart(self, obj):
-    #     pass
+
+    def get_is_favorited(self, obj):
+        if (
+            self.context.get("request")
+            and not self.context["request"].user.is_anonymous
+        ):
+            return Favorite.objects.filter(
+                recipe=obj,
+                user=self.context["request"].user,
+            ).exists()
+        return False
+
+    def get_is_in_shopping_cart(self, obj):
+        if (
+            self.context.get("request")
+            and not self.context["request"].user.is_anonymous
+        ):
+            return ShopCart.objects.filter(
+                recipe=obj,
+                user=self.context["request"].user,
+            ).exists()
+        return False
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """[POST, PATCH, DELETE] создание, правка и удаление рецептов"""
 
     image = Base64ImageField(required=False, allow_null=True)
-    ingredients = RecipeIngredientSerializer(
+    ingredients = RecipeCreadIngredientSerializer(
         many=True,
         read_only=True,
         source="recipe_ingredient",
@@ -258,6 +303,8 @@ class RecipeShopCartSerializer(serializers.ModelSerializer):
 class SubscribeSerializer(serializers.ModelSerializer):
     """[GET] Список авторов на которых подписан пользователь"""
 
+    email = serializers.ReadOnlyField()
+    username = serializers.ReadOnlyField()
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
@@ -280,7 +327,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         is_subscribed = Subscribe.objects.filter(
-            author=obj, user=self.context['request'].user
+            author=obj, user=self.context["request"].user
         ).exists()
         return is_subscribed
 

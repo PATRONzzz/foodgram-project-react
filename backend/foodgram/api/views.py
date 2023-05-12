@@ -2,26 +2,13 @@ from http import HTTPStatus
 
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
-from api.serializers import (
-    IngredientSerializer,
-    RecipeCreateSerializer,
-    RecipeReadSerializer,
-    RecipeShopCartSerializer,
-    ResetPasswordSerialize,
-    SubscribeSerializer,
-    TagSerializer,
-    UserCreateSerializer,
-    UserReadSerializer,
-)
-from app.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    ShopCart,
-    Subscribe,
-    Tag,
-)
+from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
+                             RecipeReadSerializer, RecipeShopCartSerializer,
+                             ResetPasswordSerialize, SubscribeSerializer,
+                             TagSerializer, UserCreateSerializer,
+                             UserReadSerializer)
+from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
+                        ShopCart, Subscribe, Tag)
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -82,12 +69,13 @@ class UserViewSet(
     def subscriptions(self, request, **kwargs):
         queryset = CustomUser.objects.filter(autors__user=request.user)
         page = self.paginate_queryset(queryset)
-        searilizer = SubscribeSerializer(
+        serializer = SubscribeSerializer(
             page,
             many=True,
-            context={"user": request.user},
+            context={"request": request},
         )
-        return Response(searilizer.data, status=status.HTTP_200_OK)
+        # return Response(serializer.data, status=status.HTTP_200_OK)
+        return self.get_paginated_response(serializer.data)
 
     @action(
         detail=True,
@@ -231,11 +219,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return response
 
 
-class TagViewSet(viewsets.ModelViewSet):
+class TagViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     """Теги"""
 
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
+    pagination_class = None
 
 
 class IngredientViewSet(viewsets.ModelViewSet):

@@ -1,16 +1,17 @@
 <h1  style="margin-left: 0"><img  src='https://user-images.githubusercontent.com/60087209/230705080-f7863f40-6753-463b-b5be-2c407e404d86.png'  width='30'  
-style=" position: relative; top: 0.3ch; margin-right: 0ch"> api_yamdb</h1>
+style=" position: relative; top: 0.3ch; margin-right: 0ch"> 
+foodgram-project-react</h1>
   
 
 
-Проект api_yamdb является бэкенд составляющей социальной сети **YaMDb**. Проект собирает отзывы пользователей на произведения.
+Проект foodgram-project-react является бэкенд составляющей социальной сети **YaMDb**. Проект собирает отзывы пользователей на произведения.
 
 **_Статус workflow_**
 ![example workflow](https://github.com/PATRONzzz/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
 
 **_Адрес сервера: 158.160.60.92_**
 
-**_В api_yamdb реализованы эндпоинты для:_**
+**_В foodgram-project-react реализованы эндпоинты для:_**
 
 - Регистрация пользователей и выдача токенов,
 - Категории (типы) произведений
@@ -125,7 +126,7 @@ POSTGRES_USER=yatube_user
 # Укажите пароль для пользователя
 POSTGRES_PASSWORD=xxxyyyzzz
 # Укажите localhost
-DB_HOST=127.0.0.1
+DB_HOST=db
 # Укажите порт для подключения к базе
 DB_PORT=5432 
 ```
@@ -173,45 +174,9 @@ docker-compose down
 
 
 
-## Документация  [api_yamdb](http://localhost/redoc/) 
+## Документация  [foodgram-project-react](http://localhost/api/redoc/) 
 
-**Пример**
-
-POST .../api/v1/titles/
-
-```
-{
-    "name": "string",
-    "year": 0,
-    "description": "string",
-    "genre": [
-        "string"
-    ],
-    "category": "string"
-}
-```
-Ответ
-
-```
-{
-    "id": 0,
-    "name": "string",
-    "year": 0,
-    "rating": 0,
-    "description": "string",
-    "genre": [
-        {
-        "name": "string",
-        "slug": "string"
-        }
-    ],
-    "category": {
-        "name": "string",
-        "slug": "string"
-    }
-}
-```
 
 ## Автор
 
-- [PATRONzzz (Python-разработчика - разработчик 3)](https://github.com/PATRONzzz)
+- [PATRONzzz (BACKEND)](https://github.com/PATRONzzz)

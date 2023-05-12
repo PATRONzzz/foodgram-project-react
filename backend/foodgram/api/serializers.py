@@ -1,15 +1,8 @@
 import base64
 
 import webcolors
-from app.models import (
-    CustomUser,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    ShopCart,
-    Subscribe,
-    Tag,
-)
+from app.models import (CustomUser, Ingredient, Recipe, Recipe_ingredient,
+                        ShopCart, Subscribe, Tag)
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
@@ -55,11 +48,12 @@ class UserReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        user = self.context["request"].user
-        if user.is_anonymous:
-            return False
-        is_subscribed = Subscribe.objects.filter(author=obj, user=user).exists()
-        return is_subscribed
+        if (self.context.get('request')
+            and not self.context['request'].user.is_anonymous):
+            return Subscribe.objects.filter(user=self.context['request'].user,
+                                            author=obj).exists()
+        return False
+
 
 
 class UserCreateSerializer(serializers.ModelSerializer):
@@ -260,9 +254,6 @@ class SubscribeSerializer(serializers.ModelSerializer):
     recipes_count = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
     is_subscribed = serializers.SerializerMethodField()
-    id = serializers.ReadOnlyField(source="author.id")
-    email = serializers.ReadOnlyField(source="author.email")
-    username = serializers.ReadOnlyField(source="author.username")
 
     class Meta:
         model = CustomUser
@@ -282,7 +273,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
 
     def get_is_subscribed(self, obj):
         is_subscribed = Subscribe.objects.filter(
-            author=obj, user=self.context["user"]
+            author=obj, user=self.context['request'].user
         ).exists()
         return is_subscribed
 

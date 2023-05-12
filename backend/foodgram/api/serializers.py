@@ -55,7 +55,6 @@ class UserReadSerializer(serializers.ModelSerializer):
         return False
 
 
-
 class UserCreateSerializer(serializers.ModelSerializer):
     """[POST] Создание нового пользователя."""
 
@@ -85,10 +84,10 @@ class ResetPasswordSerialize(serializers.ModelSerializer):
     def validate(self, data):
         if data["new_password"] == data["current_password"]:
             raise serializers.ValidationError(
-                "The password should not match the current"
+                "Пароль не должен совпадать с текущим!"
             )
         if validate_password(data["new_password"]):
-            raise serializers.ValidationError("Incorrect password")
+            raise serializers.ValidationError("Не коректный пароль!")
         return data
 
     def update(self, instance, validated_data):
@@ -96,7 +95,7 @@ class ResetPasswordSerialize(serializers.ModelSerializer):
             instance.set_password(validated_data["new_password"])
             instance.save()
         else:
-            raise serializers.ValidationError("Current password is not correct")
+            raise serializers.ValidationError("Не верно введен текущий пароль")
         return instance
 
 
@@ -143,6 +142,9 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         source="recipe_ingredient",
     )
     author = UserReadSerializer()
+    # is_favorited = serializers.SerializerMethodField()
+    # is_in_shopping_cart = serializers.SerializerMethodField()
+
 
     class Meta:
         model = Recipe
@@ -156,7 +158,12 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             "text",
             "cooking_time",
         )
-        depth = 1
+        
+    # def get_is_favorited(self, obj):
+    #     pass
+    
+    # def get_is_in_shopping_cart(self, obj):
+    #     pass
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):

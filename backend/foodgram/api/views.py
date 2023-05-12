@@ -74,7 +74,6 @@ class UserViewSet(
             many=True,
             context={"request": request},
         )
-        # return Response(serializer.data, status=status.HTTP_200_OK)
         return self.get_paginated_response(serializer.data)
 
     @action(
@@ -236,5 +235,6 @@ class IngredientViewSet(viewsets.ModelViewSet):
 
     queryset = Ingredient.objects.all()
     serializer_class = IngredientSerializer
+    pagination_class = None
     filter_backends = (filters.SearchFilter,)
     search_fields = ("^name",)

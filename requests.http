@@ -61,7 +61,7 @@ Content-Type: application/json
 "username": "User_1",
 "first_name": "User",
 "last_name": "LastUser",
-"password": "Qwerty123"
+"password": "Qwerty1231"
 }
 
 ###
@@ -74,12 +74,10 @@ Content-Type: application/json
     "email": "androsov.aretm.v@gmail.com"
 }
 
-//  "auth_token": "ae02e48e566b744c86b984bacf5b7583de34fd57"
-
 ###
 //  разлогиниться 
 POST http://{{host}}/api/auth/token/logout/ 
-Authorization: Token ae02e48e566b744c86b984bacf5b7583de34fd57
+Authorization: Token {{user_token}}
 
 
 ###
@@ -141,7 +139,7 @@ Content-Type: application/json
 2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_3",
+"name": "rfecipe_6",
 "text": "stringerer",
 "cooking_time": 54
 }

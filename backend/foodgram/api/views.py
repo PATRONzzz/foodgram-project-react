@@ -43,8 +43,6 @@ class UserViewSet(
 
     queryset = CustomUser.objects.all()
     pagination_class = UserPagination
-    # filter_backends = (DjangoFilterBackend,)
-    # filterset_fields = ("cooking_time",)
 
     def get_serializer_class(self):
         if self.action in ("list", "retrive"):
@@ -140,8 +138,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateSerializer
     pagination_class = RecipePagination
+    filter_backends = [
+        filters.SearchFilter,
+        filters.OrderingFilter,
+        DjangoFilterBackend,
+    ]
+    filterset_fields = {
+        #     "author": ["exact"],
+        #     "cooking_time": ["exact"],
+        "tags": [
+            "exact",
+            "recipe__tags__slug",
+        ],
+    }
+    # filterset_fields = [
+    #     "author",
+    # ]
+    # filterset_class = RecipeFilter
 
     def get_serializer_class(self):
+        print(self.request.query_params)
         if self.action in ("list", "retrieve"):
             return RecipeReadSerializer
         return RecipeCreateSerializer

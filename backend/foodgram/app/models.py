@@ -21,6 +21,9 @@ class Tag(models.Model):
         verbose_name = "тег"
         verbose_name_plural = "теги"
 
+    def __str__(self):
+        return self.name
+
 
 class Ingredient(models.Model):
     """Ингридиент"""

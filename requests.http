@@ -37,7 +37,7 @@ Authorization: Token {{user_token}}
 
 ###
 // профиль пользователя
-GET http://{{host}}/api/users/32/
+GET http://{{host}}/api/users/3/
 
 
 ###
@@ -112,13 +112,19 @@ GET http://{{host}}/api/tags/1/
 
 ###
 // Список рецептов
-# GET http://{{host}}/api/recipes/
-GET http://{{host}}/api/recipes/?cooking_time=0
+GET http://{{host}}/api/recipes/
+###
+GET http://{{host}}/api/recipes/?tags=breakfast
+###
+GET http://{{host}}/api/recipes/?cooking_time=54
+###
+GET http://{{host}}/api/recipes/?author=1
+
 
 ###
 // Создание рецепта
 POST http://{{host}}/api/recipes/
-Authorization: Token {{token_admin}}
+Authorization: Token {{user_token}}
 Content-Type: application/json
 
 {
@@ -128,16 +134,15 @@ Content-Type: application/json
   "amount": 111
 },
 {
-  "id": 6,
+  "id": 8,
   "amount": 17
 }
 ],
 "tags": [
-1,
-2
+1
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_6",
+"name": "rfecipe_832",
 "text": "stringerer",
 "cooking_time": 54
 }
@@ -148,7 +153,7 @@ GET http://{{host}}/api/recipes/12/
 
 ###
 // редактирование рецепта
-PATCH  http://{{host}}/api/recipes/12/
+PATCH  http://{{host}}/api/recipes/18/
 Authorization: Token {{user_token}}
 Content-Type: application/json
 
@@ -194,7 +199,7 @@ GET http://{{host}}/api/recipes/download_shopping_cart/
 Authorization: Token {{user_token}}
 
 ###
-// Список покупок, запрос от неавторизованного пользователся
+// Список покупок
 GET http://{{host}}/api/recipes/download_shopping_cart/
 Authorization: Token {{user_token}}
 
@@ -216,7 +221,7 @@ Authorization: Token {{user_token}}
 
 ###
 // подписаться на пользователя
-POST http://{{host}}/api/users/1/subscribe/
+POST http://{{host}}/api/users/2/subscribe/
 Authorization: Token {{user_token}}
 
 ###

@@ -116,7 +116,9 @@ GET http://{{host}}/api/recipes/
 ###
 GET http://{{host}}/api/recipes/?tags=breakfast
 ###
-GET http://{{host}}/api/recipes/?cooking_time=54
+GET http://{{host}}/api/recipes/?is_in_shopping_cart=1
+###
+GET http://{{host}}/api/recipes/?is_favorited=1
 ###
 GET http://{{host}}/api/recipes/?author=1
 

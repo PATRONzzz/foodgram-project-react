@@ -120,9 +120,9 @@ cd /infra/
 # Укажите, что используете postgresql
 DB_ENGINE=django.db.backends.postgresql
 # Укажите имя созданной базы данных
-DB_NAME=yatube
+DB_NAME=foodgram
 # Укажите имя пользователя
-POSTGRES_USER=yatube_user
+POSTGRES_USER=foodgram_user
 # Укажите пароль для пользователя
 POSTGRES_PASSWORD=xxxyyyzzz
 # Укажите localhost

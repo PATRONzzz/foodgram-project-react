@@ -131,11 +131,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         filters.OrderingFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = [
-        "author",
-    ]
-    # filterset_class = RecipeFilter
-    ordering_field = ()
+    # filterset_fields = [
+    #     "author",
+    # ]
+    filterset_class = RecipeFilter
+    # ordering_field = ()
 
     def get_serializer_class(self):
         print(self.request.query_params)

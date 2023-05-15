@@ -221,7 +221,7 @@ Authorization: Token {{user_token}}
 
 ###
 // подписаться на пользователя
-POST http://{{host}}/api/users/2/subscribe/
+POST http://{{host}}/api/users/16/subscribe/
 Authorization: Token {{user_token}}
 
 ###

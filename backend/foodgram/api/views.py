@@ -1,27 +1,15 @@
 from http import HTTPStatus
 
+from api.filters import RecipeFilter
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated
-from api.serializers import (
-    IngredientSerializer,
-    RecipeCreateSerializer,
-    RecipeReadSerializer,
-    RecipeShopCartSerializer,
-    ResetPasswordSerialize,
-    SubscribeSerializer,
-    TagSerializer,
-    UserCreateSerializer,
-    UserReadSerializer,
-)
-from app.models import (
-    Favorite,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    ShopCart,
-    Subscribe,
-    Tag,
-)
+from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
+                             RecipeReadSerializer, RecipeShopCartSerializer,
+                             ResetPasswordSerialize, SubscribeSerializer,
+                             TagSerializer, UserCreateSerializer,
+                             UserReadSerializer)
+from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
+                        ShopCart, Subscribe, Tag)
 from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from django.http import HttpResponse
@@ -143,18 +131,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         filters.OrderingFilter,
         DjangoFilterBackend,
     ]
-    filterset_fields = {
-        #     "author": ["exact"],
-        #     "cooking_time": ["exact"],
-        "tags": [
-            "exact",
-            "recipe__tags__slug",
-        ],
-    }
-    # filterset_fields = [
-    #     "author",
-    # ]
+    filterset_fields = [
+        "author",
+    ]
     # filterset_class = RecipeFilter
+    ordering_field = ()
 
     def get_serializer_class(self):
         print(self.request.query_params)

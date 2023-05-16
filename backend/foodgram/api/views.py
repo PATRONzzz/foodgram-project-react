@@ -130,8 +130,6 @@ class RecipeViewSet(viewsets.ModelViewSet):
         DjangoFilterBackend,
     ]
     filterset_class = RecipeFilter
-    # ordering_field = ()
-    # search_field = ()
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
@@ -238,7 +236,11 @@ class TagViewSet(
     pagination_class = None
 
 
-class IngredientViewSet(viewsets.ModelViewSet):
+class IngredientViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     """Ингридиенты"""
 
     queryset = Ingredient.objects.all()

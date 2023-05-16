@@ -1,32 +1,10 @@
 import base64
 
-import webcolors
-from app.models import (
-    CustomUser,
-    Favorite,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    ShopCart,
-    Subscribe,
-    Tag,
-)
+from app.models import (CustomUser, Favorite, Ingredient, Recipe,
+                        Recipe_ingredient, ShopCart, Subscribe, Tag)
 from django.contrib.auth.password_validation import validate_password
 from django.core.files.base import ContentFile
-from django.shortcuts import get_object_or_404
-from rest_framework import permissions, serializers
-
-
-class Hex2NameColor(serializers.Field):
-    def to_representation(self, value):
-        return value
-
-    def to_internal_value(self, data):
-        try:
-            data = webcolors.hex_to_name(data)
-        except ValueError:
-            raise serializers.ValidationError("There is no name for this color")
-        return data
+from rest_framework import serializers
 
 
 class Base64ImageField(serializers.ImageField):
@@ -163,7 +141,7 @@ class RecipeReadIngredientSerializer(serializers.ModelSerializer):
 class RecipeReadSerializer(serializers.ModelSerializer):
     """[GET] получение рецептов"""
 
-    image = Base64ImageField(required=False, allow_null=True)
+    image = Base64ImageField(read_only=True)
     ingredients = RecipeReadIngredientSerializer(
         many=True,
         source="recipe_ingredient",
@@ -214,7 +192,7 @@ class RecipeReadSerializer(serializers.ModelSerializer):
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """[POST, PATCH, DELETE] создание, правка и удаление рецептов"""
 
-    image = Base64ImageField(required=False, allow_null=True)
+    image = Base64ImageField(read_only=True)
     ingredients = RecipeCreadIngredientSerializer(
         many=True,
         read_only=True,

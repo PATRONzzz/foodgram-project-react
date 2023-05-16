@@ -1,8 +1,6 @@
-from http import HTTPStatus
-
 from api.filters import RecipeFilter
 from api.pagination import RecipePagination, UserPagination
-from api.permissions import CustomIsAuthenticated
+from api.permissions import CustomIsAuthenticated, IsAuthorOrReadOnly
 from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
                              RecipeReadSerializer, RecipeShopCartSerializer,
                              ResetPasswordSerialize, SubscribeSerializer,
@@ -10,7 +8,6 @@ from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
                              UserReadSerializer)
 from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
                         ShopCart, Subscribe, Tag)
-from django.core.exceptions import PermissionDenied
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -126,31 +123,29 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateSerializer
     pagination_class = RecipePagination
+    permission_classes = (IsAuthorOrReadOnly, )
     filter_backends = [
         filters.SearchFilter,
         filters.OrderingFilter,
         DjangoFilterBackend,
     ]
-    # filterset_fields = [
-    #     "author",
-    # ]
     filterset_class = RecipeFilter
     # ordering_field = ()
+    # search_field = ()
 
     def get_serializer_class(self):
-        print(self.request.query_params)
         if self.action in ("list", "retrieve"):
             return RecipeReadSerializer
         return RecipeCreateSerializer
-
+    
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 
     def perform_update(self, serializer):
         if serializer.instance.author != self.request.user:
-            raise PermissionDenied(
-                "Изменение чужого контента запрещено!",
-                HTTPStatus.FORBIDDEN,
+            return Response(
+                {"errors": "Изменение чужого контента запрещено!"},
+                status=status.HTTP_403_FORBIDDEN,
             )
         super(RecipeViewSet, self).perform_update(serializer)
 

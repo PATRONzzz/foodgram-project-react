@@ -1,5 +1,6 @@
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+from django.utils.html import format_html
 from users.models import CustomUser
 
 
@@ -13,9 +14,23 @@ class Tag(models.Model):
         unique=True,
     )
     # цветовой Hex-код
-    color = models.CharField(max_length=7, unique=True)
+    color = models.CharField(
+        "Цвет",
+        max_length=7,
+        unique=True,
+        validators=[
+            RegexValidator(
+                '^#([a-fA-F0-9]{6})',
+                message='Не верный формат цвета.'
+            )
+        ]
+    )
     # slug
-    slug = models.SlugField(max_length=200, unique=True)
+    slug = models.SlugField(
+        "Слаг",
+        max_length=200,
+        unique=True,
+    )
 
     class Meta:
         verbose_name = "тег"
@@ -29,9 +44,16 @@ class Ingredient(models.Model):
     """Ингридиент"""
 
     # наименование
-    name = models.CharField(max_length=200, unique=True)
+    name = models.CharField(
+        "Название",
+        max_length=200,
+        unique=True,
+        )
     # единица измерения
-    measurement_unit = models.CharField(max_length=200)
+    measurement_unit = models.CharField(
+        "Единица измерения",
+        max_length=200,
+        )
 
     def __str__(self):
         return f"{self.name}, {self.measurement_unit}"
@@ -53,6 +75,7 @@ class Recipe(models.Model):
     )
     # название
     name = models.CharField(
+        "Название",
         max_length=200,
         unique=True,
     )
@@ -65,7 +88,7 @@ class Recipe(models.Model):
     # дата публикации
     pub_date = models.DateTimeField("Дата публикации", auto_now_add=True)
     # описание
-    text = models.TextField()
+    text = models.TextField("Описание")
     # ингридиенты
     ingredients = models.ManyToManyField(
         Ingredient,
@@ -77,9 +100,13 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         verbose_name="тег",
+        
     )
     # время приготовления в минутах
-    cooking_time = models.IntegerField()
+    cooking_time = models.IntegerField(
+        "Время приготовления",
+        validators=(MinValueValidator(1),),
+    )
 
     class Meta:
         ordering = ("-pub_date",)
@@ -103,7 +130,7 @@ class Recipe_ingredient(models.Model):
     )
     # количество
     amount = models.IntegerField(
-        # "Количество",
+        "Количество",
         validators=(MinValueValidator(1),),
     )
 
@@ -117,14 +144,6 @@ class Recipe_ingredient(models.Model):
             )
         ]
 
-    # def __str__(self):
-    #     return (
-    #         f"{self.recipe.name}: "
-    #         f"{self.ingredient.name} - "
-    #         f"{self.amount} "
-    #         f"{self.ingredient.measurement_unit}"
-    #     )
-
 
 class Favorite(models.Model):
     """Избранное"""
@@ -133,11 +152,13 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
+        related_name='favorite_user',
     )
     # рецепт
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name='favorite_recipe',
     )
 
     class Meta:
@@ -180,6 +201,7 @@ class ShopCart(models.Model):
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
+        related_name="shopcart_recipe",
     )
 
     class Meta:

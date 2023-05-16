@@ -16,8 +16,6 @@ class RecipeFilter(filters.FilterSet):
         fields = (
             "tags",
             "author",
-            # "is_favorited",
-            # "is_in_shopping_cart",
         )
         
     def is_in_shopping_cart_filter(self, queryset, name, value):

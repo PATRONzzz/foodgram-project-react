@@ -1,5 +1,5 @@
 @token_admin = a5f4c755d774de4627a189388f641d4e0c00e6db
-@user_token = 92ee668586c0c691b36b08d5381f4b0ddc4f626d
+@user_token = 9f3450ae8548b2bfb9db159aa93d8ac835d618a6
 
 @host = 127.0.0.1:8000
 # @host = 127.0.0.1
@@ -57,11 +57,11 @@ POST http://{{host}}/api/users/
 Content-Type: application/json
 
 {
-"email": "user_1@yandex.ru",
-"username": "User_1",
+"email": "user_2@yandex.ru",
+"username": "User_2",
 "first_name": "User",
 "last_name": "LastUser",
-"password": "Qwerty1231"
+"password": "Qwerty12312"
 }
 
 ###
@@ -70,8 +70,8 @@ POST http://{{host}}/api/auth/token/login/
 Content-Type: application/json
 
 {
-    "password": "Qwerty1231",
-    "email": "user_1@yandex.ru"
+    "password": "Qwerty12312",
+    "email": "user_2@yandex.ru"
 }
 
 ###
@@ -116,17 +116,25 @@ GET http://{{host}}/api/recipes/
 ###
 GET http://{{host}}/api/recipes/?tags=breakfast
 ###
-GET http://{{host}}/api/recipes/?is_in_shopping_cart=1
+GET http://{{host}}/api/recipes/?page=1&limit=6&is_in_shopping_cart=0
+Authorization: Token {{user_token}}
 ###
-GET http://{{host}}/api/recipes/?is_favorited=1
+GET http://{{host}}/api/recipes/?is_favorited=0
+Authorization: Token {{user_token}}
 ###
 GET http://{{host}}/api/recipes/?author=1
-
+Authorization: Token {{user_token}}
+###
+GET http://{{host}}/api/recipes/?is_in_shopping_cart=1
+Authorization: Token {{user_token}}
+###
+GET http://{{host}}/api/recipes/?page=1&limit=6&is_favorited=1
+Authorization: Token {{user_token}}
 
 ###
 // Создание рецепта
 POST http://{{host}}/api/recipes/
-Authorization: Token {{user_token}}
+# Authorization: Token {{user_token}}
 Content-Type: application/json
 
 {
@@ -141,17 +149,17 @@ Content-Type: application/json
 }
 ],
 "tags": [
-1
+2
 ],
 "image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAgMAAABieywaAAAACVBMVEUAAAD///9fX1/S0ecCAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAACklEQVQImWNoAAAAggCByxOyYQAAAABJRU5ErkJggg==",
-"name": "rfecipe_832",
-"text": "stringerer",
+"name": "rfecipe_823532",
+"text": "stringerer2",
 "cooking_time": 54
 }
 
 ###
 // получение рецепта
-GET http://{{host}}/api/recipes/12/
+GET http://{{host}}/api/recipes/2/
 
 ###
 // редактирование рецепта
@@ -242,3 +250,4 @@ GET http://{{host}}/api/ingredients/1/
 ###
 GET  http://{{host}}/api/users/subscriptions/?page=1&limit=2&recipes_limit=2
 Authorization: Token {{user_token}}
+

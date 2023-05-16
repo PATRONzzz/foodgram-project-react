@@ -1,13 +1,26 @@
 from api.filters import RecipeFilter
 from api.pagination import RecipePagination, UserPagination
 from api.permissions import CustomIsAuthenticated, IsAuthorOrReadOnly
-from api.serializers import (IngredientSerializer, RecipeCreateSerializer,
-                             RecipeReadSerializer, RecipeShopCartSerializer,
-                             ResetPasswordSerialize, SubscribeSerializer,
-                             TagSerializer, UserCreateSerializer,
-                             UserReadSerializer)
-from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
-                        ShopCart, Subscribe, Tag)
+from api.serializers import (
+    IngredientSerializer,
+    RecipeCreateSerializer,
+    RecipeReadSerializer,
+    RecipeShopCartSerializer,
+    ResetPasswordSerialize,
+    SubscribeSerializer,
+    TagSerializer,
+    UserCreateSerializer,
+    UserReadSerializer,
+)
+from app.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    Recipe_ingredient,
+    ShopCart,
+    Subscribe,
+    Tag,
+)
 from django.db.models import Sum
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
@@ -123,7 +136,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     serializer_class = RecipeCreateSerializer
     pagination_class = RecipePagination
-    permission_classes = (IsAuthorOrReadOnly, )
+    permission_classes = (IsAuthorOrReadOnly,)
     filter_backends = [
         filters.SearchFilter,
         filters.OrderingFilter,
@@ -135,7 +148,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.action in ("list", "retrieve"):
             return RecipeReadSerializer
         return RecipeCreateSerializer
-    
+
     def perform_create(self, serializer):
         serializer.save(author_id=self.request.user.id)
 

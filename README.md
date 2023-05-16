@@ -7,19 +7,22 @@ foodgram-project-react</h1>
 Проект foodgram-project-react реализован для публикации рецептов. Пользователи могут публиковать свои рецепты, просматривать рецепты других пользователей, формировать корзину покупак на их основе, а также подписыватсья на любимых авторов.
 
 **_Статус workflow_**
-![example workflow](https://github.com/PATRONzzz/yamdb_final/actions/workflows/yamdb_workflow.yml/badge.svg)
+![example workflow](https://github.com/PATRONzzz/foodgram-project-react/actions/workflows/foodgram-project-react.yml/badge.svg)
 
-**_Адрес сервера: 158.160.106.41**
+**_Адрес сервера: 158.160.106.41_**
 
 **_В foodgram-project-react реализованы эндпоинты для:_**
 
-- Регистрация пользователей и выдача токенов,
-- Категории (типы) произведений
-- Категории жанров
-- Произведения, к которым пишут отзывы (определённый фильм, книга или песенка).
-- Отзывы
-- Комментарии к отзывам
-- Пользователи
+- Регистрация пользователей и выдача токенов
+- Список рецептов
+- Создание рецепта
+- Получение рецепта
+- Обновление и удаление рецепов
+- Теги
+- Список покупак
+- Избранное
+- Подписки
+- Ингредиенты
 
 ## Поддерживаемые оперционные системы
 
@@ -149,8 +152,9 @@ docker-compose up -d --build
 <summary><b  style="font-size: 1.1rem;">4. Миграции </b></summary>
 
 ```
-docker-compose exec backend python manage.py migrate
-docker-compose exec backend python manage.py createsuperuser
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py createsuperuser
+docker compose exec backend python manage.py collectstatic
 ```
 </details>
 

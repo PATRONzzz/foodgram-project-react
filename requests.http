@@ -1,5 +1,5 @@
 @token_admin = a5f4c755d774de4627a189388f641d4e0c00e6db
-@user_token = 9f3450ae8548b2bfb9db159aa93d8ac835d618a6
+@user_token = 30381fd31edced0726495aba0277598e4b53f38e
 
 @host = 127.0.0.1:8000
 # @host = 127.0.0.1
@@ -12,7 +12,7 @@ get http://{{host}}/api/
 ###
 // Список пользователей
 GET http://{{host}}/api/users/ 
-
+Authorization: Token {{user_token}}
 ###
 // Временное
 POST http://{{host}}/api/auth/token/login/
@@ -37,8 +37,8 @@ Authorization: Token {{user_token}}
 
 ###
 // профиль пользователя
-GET http://{{host}}/api/users/3/
-
+GET http://{{host}}/api/users/2/
+Authorization: Token {{user_token}}
 
 ###
 // смена пароля
@@ -119,7 +119,7 @@ GET http://{{host}}/api/recipes/?tags=breakfast
 GET http://{{host}}/api/recipes/?page=1&limit=6&is_in_shopping_cart=0
 Authorization: Token {{user_token}}
 ###
-GET http://{{host}}/api/recipes/?is_favorited=0
+GET http://{{host}}/api/recipes/?is_favorited=1
 Authorization: Token {{user_token}}
 ###
 GET http://{{host}}/api/recipes/?author=1
@@ -231,7 +231,7 @@ Authorization: Token {{user_token}}
 
 ###
 // подписаться на пользователя
-POST http://{{host}}/api/users/16/subscribe/
+POST http://{{host}}/api/users/1/subscribe/
 Authorization: Token {{user_token}}
 
 ###

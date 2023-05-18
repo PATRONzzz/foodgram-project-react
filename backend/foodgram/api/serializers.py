@@ -11,17 +11,8 @@ from app.models import (
     Tag,
 )
 from django.contrib.auth.password_validation import validate_password
-from django.core.files.base import ContentFile
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
-
-
-class Base64ImageField(serializers.ImageField):
-    def to_internal_value(self, data):
-        if isinstance(data, str) and data.startswith("data:image"):
-            format, imgstr = data.split(";base64,")
-            ext = format.split("/")[-1]
-            data = ContentFile(base64.b64decode(imgstr), name="temp." + ext)
-        return super().to_internal_value(data)
 
 
 class UserReadSerializer(serializers.ModelSerializer):
@@ -45,9 +36,8 @@ class UserReadSerializer(serializers.ModelSerializer):
             self.context.get("request")
             and not self.context["request"].user.is_anonymous
         ):
-            return Subscribe.objects.filter(
-                user=self.context["request"].user, author=obj
-            ).exists()
+            user = self.context["request"].user
+            return user.subscriber.filter(author=obj).exists()
         return False
 
 
@@ -184,22 +174,40 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             ).exists()
         return False
 
+    # def get_is_in_shopping_cart(self, obj):
+    #     if (
+    #         self.context.get("request")
+    #         and not self.context["request"].user.is_anonymous
+    #     ):
+    #         return ShopCart.objects.filter(
+    #             recipe=obj,
+    #             user=self.context["request"].user,
+    #         ).exists()
+    #     return False
+
+    # def get_is_in_shopping_cart(self, obj):
+    #     if (
+    #         self.context.get("request")
+    #         and not self.context["request"].user.is_anonymous
+    #     ):
+    #         user = self.context["request"].user
+    #         return user.carts.filter(recipe=obj).exists()
+    #     return False
+
     def get_is_in_shopping_cart(self, obj):
         if (
             self.context.get("request")
             and not self.context["request"].user.is_anonymous
         ):
-            return ShopCart.objects.filter(
-                recipe=obj,
-                user=self.context["request"].user,
-            ).exists()
+            user = self.context["request"].user
+            return user.carts.filter(recipe=obj).exists()
         return False
 
 
 class RecipeCreateSerializer(serializers.ModelSerializer):
     """[POST, PATCH, DELETE] создание, правка и удаление рецептов"""
 
-    image = Base64ImageField(read_only=True)
+    image = Base64ImageField()
     ingredients = RecipeCreadIngredientSerializer(
         many=True,
         read_only=True,

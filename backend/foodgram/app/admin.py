@@ -1,5 +1,12 @@
-from app.models import (Favorite, Ingredient, Recipe, Recipe_ingredient,
-                        ShopCart, Subscribe, Tag)
+from app.models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    Recipe_ingredient,
+    ShopCart,
+    Subscribe,
+    Tag,
+)
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from users.models import CustomUser

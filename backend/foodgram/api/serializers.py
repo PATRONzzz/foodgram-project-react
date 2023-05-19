@@ -1,18 +1,19 @@
-import base64
-
-from app.models import (
-    CustomUser,
-    Favorite,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    ShopCart,
-    Subscribe,
-    Tag,
-)
 from django.contrib.auth.password_validation import validate_password
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
+
+from app.models import (
+    CustomUser,
+    Ingredient,
+    Recipe,
+    Recipe_ingredient,
+    Subscribe,
+    Tag,
+)
+
+MESSAGE_OVERLAP_PASS = "Пароль не должен совпадать с текущим!"
+MESSAGE_INCORRECT_PASS = "Не корректный пароль"
+MESSAGE_MIN_ELEMENT = "Необходиом ввести не менее одного элемента"
 
 
 class UserReadSerializer(serializers.ModelSerializer):
@@ -69,9 +70,9 @@ class ResetPasswordSerialize(serializers.ModelSerializer):
 
     def validate(self, data):
         if data["new_password"] == data["current_password"]:
-            raise serializers.ValidationError("Пароль не должен совпадать с текущим!")
+            raise serializers.ValidationError(MESSAGE_OVERLAP_PASS)
         if validate_password(data["new_password"]):
-            raise serializers.ValidationError("Не коректный пароль!")
+            raise serializers.ValidationError(MESSAGE_INCORRECT_PASS)
         return data
 
     def update(self, instance, validated_data):
@@ -79,7 +80,7 @@ class ResetPasswordSerialize(serializers.ModelSerializer):
             instance.set_password(validated_data["new_password"])
             instance.save()
         else:
-            raise serializers.ValidationError("Не верно введен текущий пароль")
+            raise serializers.ValidationError(MESSAGE_INCORRECT_PASS)
         return instance
 
 
@@ -123,7 +124,9 @@ class RecipeReadIngredientSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source="ingredient.id")
     amount = serializers.IntegerField()
     name = serializers.ReadOnlyField(source="ingredient.name")
-    measurement_unit = serializers.ReadOnlyField(source="ingredient.measurement_unit")
+    measurement_unit = serializers.ReadOnlyField(
+        source="ingredient.measurement_unit"
+    )
 
     class Meta:
         model = Recipe_ingredient
@@ -168,31 +171,9 @@ class RecipeReadSerializer(serializers.ModelSerializer):
             self.context.get("request")
             and not self.context["request"].user.is_anonymous
         ):
-            return Favorite.objects.filter(
-                recipe=obj,
-                user=self.context["request"].user,
-            ).exists()
+            user = self.context["request"].user
+            return user.favorite_user.filter(recipe=obj).exists()
         return False
-
-    # def get_is_in_shopping_cart(self, obj):
-    #     if (
-    #         self.context.get("request")
-    #         and not self.context["request"].user.is_anonymous
-    #     ):
-    #         return ShopCart.objects.filter(
-    #             recipe=obj,
-    #             user=self.context["request"].user,
-    #         ).exists()
-    #     return False
-
-    # def get_is_in_shopping_cart(self, obj):
-    #     if (
-    #         self.context.get("request")
-    #         and not self.context["request"].user.is_anonymous
-    #     ):
-    #         user = self.context["request"].user
-    #         return user.carts.filter(recipe=obj).exists()
-    #     return False
 
     def get_is_in_shopping_cart(self, obj):
         if (
@@ -230,9 +211,7 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
     def validate(self, data):
         ingredients = self.initial_data.get("ingredients")
         if not ingredients or len(ingredients) < 1:
-            raise serializers.ValidationError(
-                "Необходимо ввести не менее одного ингредиента!"
-            )
+            raise serializers.ValidationError(MESSAGE_MIN_ELEMENT)
         data["ingredients"] = ingredients
         return data
 
@@ -330,5 +309,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         recipes = obj.recipes.all()
         if limit:
             recipes = recipes[: int(limit)]
-        serializer = RecipeShopCartSerializer(recipes, many=True, read_only=True)
+        serializer = RecipeShopCartSerializer(
+            recipes, many=True, read_only=True
+        )
         return serializer.data

@@ -17,8 +17,7 @@ class Command(BaseCommand):
             "r",
             encoding="utf-8",
         ) as csv_file:
-            reader = csv.reader(csv_file, delimiter=",")
-            for name, unit in dict(reader).items():
-                Ingredient.objects.create(name=name, measurement_unit=unit)
-
+            reader = csv.DictReader(csv_file, delimiter=",")
+            Ingredient.objects.bulk_create(Ingredient(**data) for data in reader)
+        
         self.stdout.write(self.style.SUCCESS("Successfully load data"))

@@ -1,5 +1,5 @@
 @token_admin = a5f4c755d774de4627a189388f641d4e0c00e6db
-@user_token = 30381fd31edced0726495aba0277598e4b53f38e
+@user_token = 9f3450ae8548b2bfb9db159aa93d8ac835d618a6
 
 @host = 127.0.0.1:8000
 # @host = 127.0.0.1
@@ -113,8 +113,10 @@ GET http://{{host}}/api/tags/1/
 ###
 // Список рецептов
 GET http://{{host}}/api/recipes/
+Authorization: Token {{user_token}}
 ###
 GET http://{{host}}/api/recipes/?tags=breakfast
+Authorization: Token {{user_token}}
 ###
 GET http://{{host}}/api/recipes/?page=1&limit=6&is_in_shopping_cart=0
 Authorization: Token {{user_token}}
@@ -128,7 +130,7 @@ Authorization: Token {{user_token}}
 GET http://{{host}}/api/recipes/?is_in_shopping_cart=1
 Authorization: Token {{user_token}}
 ###
-GET http://{{host}}/api/recipes/?page=1&limit=6&is_favorited=1
+GET http://{{host}}/api/recipes/?is_favorited=0
 Authorization: Token {{user_token}}
 
 ###
@@ -196,7 +198,7 @@ DELETE  http://{{host}}/api/recipes/2/
 
 ###
 // добавление рецепта в список покупок
-POST http://{{host}}/api/recipes/16/shopping_cart/
+POST http://{{host}}/api/recipes/1/shopping_cart/
 Authorization: Token {{user_token}}
 ###
 // удаление рецепта из списка покупок

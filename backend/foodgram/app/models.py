@@ -1,5 +1,6 @@
 from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
+
 from users.models import CustomUser
 
 
@@ -19,10 +20,9 @@ class Tag(models.Model):
         unique=True,
         validators=[
             RegexValidator(
-                '^#([a-fA-F0-9]{6})',
-                message='Не верный формат цвета.'
+                "^#([a-fA-F0-9]{6})", message="Не верный формат цвета."
             )
-        ]
+        ],
     )
     # slug
     slug = models.SlugField(
@@ -34,6 +34,7 @@ class Tag(models.Model):
     class Meta:
         verbose_name = "тег"
         verbose_name_plural = "теги"
+        ordering = ("name",)
 
     def __str__(self):
         return self.name
@@ -47,12 +48,12 @@ class Ingredient(models.Model):
         "Название",
         max_length=200,
         unique=True,
-        )
+    )
     # единица измерения
     measurement_unit = models.CharField(
         "Единица измерения",
         max_length=200,
-        )
+    )
 
     def __str__(self):
         return f"{self.name}, {self.measurement_unit}"
@@ -60,6 +61,7 @@ class Ingredient(models.Model):
     class Meta:
         verbose_name = "ингридиент"
         verbose_name_plural = "ингридиенты"
+        ordering = ("name",)
 
 
 class Recipe(models.Model):
@@ -99,7 +101,6 @@ class Recipe(models.Model):
     tags = models.ManyToManyField(
         Tag,
         verbose_name="тег",
-        
     )
     # время приготовления в минутах
     cooking_time = models.IntegerField(
@@ -151,13 +152,13 @@ class Favorite(models.Model):
     user = models.ForeignKey(
         CustomUser,
         on_delete=models.CASCADE,
-        related_name='favorite_user',
+        related_name="favorite_user",
     )
     # рецепт
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
-        related_name='favorite_recipe',
+        related_name="favorite_recipe",
     )
 
     class Meta:

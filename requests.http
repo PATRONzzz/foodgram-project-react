@@ -118,7 +118,7 @@ Authorization: Token {{user_token}}
 GET http://{{host}}/api/recipes/?tags=breakfast
 Authorization: Token {{user_token}}
 ###
-GET http://{{host}}/api/recipes/?page=1&limit=6&is_in_shopping_cart=0
+GET http://{{host}}/api/recipes/?is_in_shopping_cart=0
 Authorization: Token {{user_token}}
 ###
 GET http://{{host}}/api/recipes/?is_favorited=1

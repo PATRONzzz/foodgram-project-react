@@ -1,15 +1,9 @@
 from django.contrib.auth.password_validation import validate_password
+
 from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
-from app.models import (
-    CustomUser,
-    Ingredient,
-    Recipe,
-    Recipe_ingredient,
-    Subscribe,
-    Tag,
-)
+from app.models import CustomUser, Ingredient, Recipe, Recipe_ingredient, Subscribe, Tag
 
 MESSAGE_OVERLAP_PASS = "Пароль не должен совпадать с текущим!"
 MESSAGE_INCORRECT_PASS = "Не корректный пароль"
@@ -33,10 +27,7 @@ class UserReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_subscribed(self, obj):
-        if (
-            self.context.get("request")
-            and not self.context["request"].user.is_anonymous
-        ):
+        if self.context.get("request") and not self.context["request"].user.is_anonymous:
             user = self.context["request"].user
             return user.subscriber.filter(author=obj).exists()
         return False
@@ -124,9 +115,7 @@ class RecipeReadIngredientSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source="ingredient.id")
     amount = serializers.IntegerField()
     name = serializers.ReadOnlyField(source="ingredient.name")
-    measurement_unit = serializers.ReadOnlyField(
-        source="ingredient.measurement_unit"
-    )
+    measurement_unit = serializers.ReadOnlyField(source="ingredient.measurement_unit")
 
     class Meta:
         model = Recipe_ingredient
@@ -167,19 +156,13 @@ class RecipeReadSerializer(serializers.ModelSerializer):
         )
 
     def get_is_favorited(self, obj):
-        if (
-            self.context.get("request")
-            and not self.context["request"].user.is_anonymous
-        ):
+        if self.context.get("request") and not self.context["request"].user.is_anonymous:
             user = self.context["request"].user
             return user.favorite_user.filter(recipe=obj).exists()
         return False
 
     def get_is_in_shopping_cart(self, obj):
-        if (
-            self.context.get("request")
-            and not self.context["request"].user.is_anonymous
-        ):
+        if self.context.get("request") and not self.context["request"].user.is_anonymous:
             user = self.context["request"].user
             return user.carts.filter(recipe=obj).exists()
         return False
@@ -298,9 +281,7 @@ class SubscribeSerializer(serializers.ModelSerializer):
         return obj.recipes.count()
 
     def get_is_subscribed(self, obj):
-        is_subscribed = Subscribe.objects.filter(
-            author=obj, user=self.context["request"].user
-        ).exists()
+        is_subscribed = Subscribe.objects.filter(author=obj, user=self.context["request"].user).exists()
         return is_subscribed
 
     def get_recipes(self, obj):
@@ -309,7 +290,5 @@ class SubscribeSerializer(serializers.ModelSerializer):
         recipes = obj.recipes.all()
         if limit:
             recipes = recipes[: int(limit)]
-        serializer = RecipeShopCartSerializer(
-            recipes, many=True, read_only=True
-        )
+        serializer = RecipeShopCartSerializer(recipes, many=True, read_only=True)
         return serializer.data

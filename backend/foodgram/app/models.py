@@ -18,11 +18,7 @@ class Tag(models.Model):
         "Цвет",
         max_length=7,
         unique=True,
-        validators=[
-            RegexValidator(
-                "^#([a-fA-F0-9]{6})", message="Не верный формат цвета."
-            )
-        ],
+        validators=[RegexValidator("^#([a-fA-F0-9]{6})", message="Не верный формат цвета.")],
     )
     # slug
     slug = models.SlugField(
@@ -207,11 +203,7 @@ class ShopCart(models.Model):
     class Meta:
         verbose_name = "корзина"
         verbose_name_plural = "списки покупок"
-        constraints = [
-            models.UniqueConstraint(
-                fields=["user", "recipe"], name="unique_shopping_cart"
-            )
-        ]
+        constraints = [models.UniqueConstraint(fields=["user", "recipe"], name="unique_shopping_cart")]
 
     def __str__(self):
         return f"{self.user.username} - {self.recipe.name}"

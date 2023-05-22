@@ -198,7 +198,7 @@ DELETE  http://{{host}}/api/recipes/2/
 
 ###
 // добавление рецепта в список покупок
-POST http://{{host}}/api/recipes/1/shopping_cart/
+POST http://{{host}}/api/recipes/2/shopping_cart/
 Authorization: Token {{user_token}}
 ###
 // удаление рецепта из списка покупок

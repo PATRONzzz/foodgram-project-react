@@ -195,6 +195,12 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         ingredients = self.initial_data.get("ingredients")
         if not ingredients or len(ingredients) < 1:
             raise serializers.ValidationError(MESSAGE_MIN_ELEMENT)
+        for ingredient in ingredients:
+            if int(ingredient["amount"]) <= 0:
+                ingredient_set = Ingredient.objects.get(pk=ingredient["id"])
+                raise serializers.ValidationError(
+                    f"Проверте ингредиент '{ingredient_set.name}', количество должно превышать 0"
+                )
         data["ingredients"] = ingredients
         return data
 
